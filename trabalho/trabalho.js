@@ -1,5 +1,6 @@
 import * as THREE from  'three';
 import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
+import KeyboardState from '../libs/util/KeyboardState.js'
 import {initRenderer, 
         initCamera,
         initDefaultBasicLight,
@@ -8,10 +9,11 @@ import {initRenderer,
         onWindowResize,
         createGroundPlaneXZ} from "../libs/util/util.js";
 
-let scene, renderer, camera, light, orbit; // Initial variables
+let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
+material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 
@@ -22,35 +24,116 @@ window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)},
 let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
 
+// To use the keyboard
+var keyboard = new KeyboardState();
+
+// To be used to manage keyboard
+let clock = new THREE.Clock();
+
 // create the ground plane
 let plane = createGroundPlaneXZ(20, 20)
 scene.add(plane);
 
-// criando material da roda
-var materialRoda = new THREE.MeshPhongMaterial({color: 0x000});
+//carroceria do carro
+let carroceriaGeometry = new THREE.BoxGeometry(6, 3, 5);
+let carroceria = new THREE.Mesh(carroceriaGeometry, material);
+carroceria.position.set(0.0, 2.0, 0.0);  // posicao da carroceria
 
-// criando roda dafault
-let GeometriaRoda= new THREE.CylinderGeometry(4, 4, 20, 32);
-let roda = new THREE.Mesh(GeometriaRoda, materialRoda);
+//farol da carroceria
+const geomeriaFarol = new THREE.ConeGeometry( 0.5, 0.5, 27 ); 
+const materialFarol = new THREE.MeshBasicMaterial( {color: 0x000000} );
+const Farol = new THREE.Mesh(geomeriaFarol, materialFarol );
+const Farol2 = new THREE.Mesh(geomeriaFarol, materialFarol );
 
-// criando suporte de carcaça
-let GeometriaCaixa = new THREE.BoxGeometry(2.5, 1, 5);
-let materialCaixa = new THREE.MeshPhongMaterial({color : 0xffffff});
-let caixa  = new THREE.Mesh(GeometriaCaixa, materialCaixa);
+Farol.position.set(3, -1, 1);
+Farol2.position.set(3, -1, -1);
 
-// criando cabine
-let Geometriacabine = new THREE.CylinderGeometry(2, 2, 2.5, 32, 1, false, 0, 3.14);
-let cabine = new THREE.Mesh(Geometriacabine, materialCaixa);
+Farol.rotateZ(Graus_radianos(90))
+Farol2.rotateZ(Graus_radianos(90))
 
-// position the cube
-// roda.position.set(0, 0, 0);
-// caixa.position.set(0, 5, 0);
-cabine.position.set(0, 5, 0);
-cabine.rotateZ(1.57);
-// add the cube to the scene
-scene.add(cabine);
+carroceria.add( Farol );
+carroceria.add( Farol2 );
 
 
+// rodas do carro
+let rodasGeometry = new THREE.CylinderGeometry( 1, 1, 1,64 );
+const materialRodas = new THREE.MeshBasicMaterial( {color: 0xffff00} ); 
+let roda1 = new THREE.Mesh(rodasGeometry, materialRodas);
+let roda2 = new THREE.Mesh(rodasGeometry, materialRodas);
+let roda3 = new THREE.Mesh(rodasGeometry, materialRodas);
+let roda4 = new THREE.Mesh(rodasGeometry, materialRodas);
+
+roda1.position.set(2.3, -1, 2.5);
+roda2.position.set(-2.3, -1, 2.5);
+roda3.position.set(2.3, -1, -2.5);
+roda4.position.set(-2.3, -1, -2.5);
+
+//rotaciona a roda em 90 graus
+var radianos = Graus_radianos(90);
+
+
+roda1.rotateX(radianos);
+roda2.rotateX(radianos);
+roda3.rotateX(radianos);
+roda4.rotateX(radianos);
+
+//adiciona as rodas na carroceria
+carroceria.add(roda1);
+carroceria.add(roda2);
+carroceria.add(roda3);
+carroceria.add(roda4);
+carroceria.rotateY(radianos);
+
+// add the carroceria to the scene
+scene.add(carroceria);
+
+
+function keyboardUpdate() {
+
+  keyboard.update();
+
+  if ( keyboard.pressed("up") ){
+
+    carroceria.translateX(  .5 );
+
+  }
+  if ( keyboard.pressed("down") ){
+
+    carroceria.translateX( -.5 );
+    
+  }  
+
+  //angulo de rotacai do carro
+  var angle = THREE.MathUtils.degToRad(3);
+  var anguloRoda = 0;
+
+  
+  if ( keyboard.pressed("left") ){
+    //rotacao das rodas
+    if( roda1.rotation.z > Graus_radianos(-30)){
+      anguloRoda -= 0.01
+      roda1.rotateZ( anguloRoda );
+      roda3.rotateZ( anguloRoda );
+    }
+    if(keyboard.pressed("left")  && keyboard.pressed("up")) carroceria.rotateY( angle );
+
+    if(keyboard.pressed("left")  && keyboard.pressed("down")) carroceria.rotateY( -angle );
+  }  
+  if ( keyboard.pressed("right") ){
+    //rotacao das rodas
+      if(roda1.rotation.z < Graus_radianos(30)){
+        anguloRoda += 0.01
+        roda1.rotateZ( anguloRoda );
+        roda3.rotateZ( anguloRoda );
+        console.log(roda1.rotation.z);
+
+      }
+      if(keyboard.pressed("right")  && keyboard.pressed("up")) carroceria.rotateY( -angle );
+
+      if(keyboard.pressed("right")  && keyboard.pressed("down")) carroceria.rotateY( angle );
+  } 
+
+}
 
 // Use this to show information onscreen
 let controls = new InfoBox();
@@ -62,9 +145,18 @@ let controls = new InfoBox();
   controls.add("* Scroll to zoom in/out.");
   controls.show();
 
+
 render();
+
+//funcao para tranformar graus em radianos
+function Graus_radianos(anguloGraus) {
+  var radianos = anguloGraus * (Math.PI / 180);
+  return radianos;
+}
+
 function render()
 {
   requestAnimationFrame(render);
+  keyboardUpdate();
   renderer.render(scene, camera) // Render scene
 }
