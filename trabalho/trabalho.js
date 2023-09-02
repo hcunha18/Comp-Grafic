@@ -117,31 +117,38 @@ function keyboardUpdate() {
         velocidade_carro = 0.5
         carroceria.translateX(velocidade_carro);
         roda1.rotateZ(0);
-        acelerou = true;
+
 
     }else{
-      if (velocidade_carro > 0 && acelerou) {
+      if (velocidade_carro > 0)  {
         velocidade_carro -= 0.025
+        velocidade_carro = Number(velocidade_carro.toFixed(2));
         carroceria.translateX(velocidade_carro)
+        
+
       }
     } 
 
     if (keyboard.pressed("down")) {
         velocidade_carro = -0.5
+        velocidade_carro = Number(velocidade_carro.toFixed(2));
         carroceria.translateX(velocidade_carro);
-        acelerou = false;
+       
 
     }else{
-      if (velocidade_carro < 0 && !acelerou) {
+      if (velocidade_carro < 0 ) {
         velocidade_carro += 0.025
+        velocidade_carro = Number(velocidade_carro.toFixed(2));
         carroceria.translateX(velocidade_carro)
       }
+    
     } 
 
     if (keyboard.pressed("left")) {
         //rotacao das rodas
         if (roda1.rotation.z > Graus_radianos(-30)) {
             anguloRoda -= Graus_radianos(1)
+            anguloRoda = Number(anguloRoda.toFixed(2));
             roda1.rotateZ(anguloRoda);
             roda3.rotateZ(anguloRoda);
         }
@@ -155,7 +162,7 @@ function keyboardUpdate() {
     } else {
         if (roda1.rotation.z < Graus_radianos(0)) {
             anguloRoda += Graus_radianos(1)
-        
+            anguloRoda = Number(anguloRoda.toFixed(2));
             roda1.rotateZ(anguloRoda);
             roda3.rotateZ(anguloRoda);
         }
@@ -164,6 +171,7 @@ function keyboardUpdate() {
         //rotacao das rodas
         if (roda1.rotation.z < Graus_radianos(30)) {
             anguloRoda += Graus_radianos(1)
+            anguloRoda = Number(anguloRoda.toFixed(2));
             roda1.rotateZ(anguloRoda);
             roda3.rotateZ(anguloRoda);
         }
@@ -177,7 +185,7 @@ function keyboardUpdate() {
     } else {
         if (roda1.rotation.z > Graus_radianos(0)) {
             anguloRoda -= Graus_radianos(1)
-          
+            anguloRoda = Number(anguloRoda.toFixed(2));
             roda1.rotateZ(anguloRoda);
             roda3.rotateZ(anguloRoda)
         }
