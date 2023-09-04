@@ -18,7 +18,7 @@ camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this positi
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
-let cameraOffset = new THREE.Vector3(0, 15, 30);
+let cameraOffset = new THREE.Vector3(0, 25, 50);
 let cameraLookAhead = 5.0;
 
 // Listen window size changes
