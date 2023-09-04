@@ -10,16 +10,19 @@ import {
   onWindowResize,
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
+import { TrackballControls } from "../build/jsm/controls/TrackballControls.js";
 
-let scene, renderer, camera, material, light, orbit; // Initial variables
+let scene, renderer, camera, material, light, orbit, trackball; // Initial variables
 scene = new THREE.Scene(); // Create main scene
 renderer = initRenderer(); // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
+trackball = new TrackballControls(camera, renderer.domElement);
 let cameraOffset = new THREE.Vector3(0, 25, 50);
 let cameraLookAhead = 5.0;
+let isOrbitActive = true;
 
 // Listen window size changes
 window.addEventListener(
@@ -113,12 +116,52 @@ function updateCameraPosition() {
   camera.lookAt(lookAtPosition);
 }
 
+function toggleInspectionMode() {
+  if (isOrbitActive) {
+    // Mostrar todos os objetos
+    scene.children.forEach((child) => {
+      child.visible = true;
+    });
+  } else {
+    // Ocultar todos os objetos exceto a carroceria e rodas
+    scene.children.forEach((child) => {
+      if (
+        child !== carroceria &&
+        child !== roda1 &&
+        child !== roda2 &&
+        child !== roda3 &&
+        child !== roda4
+      ) {
+        child.visible = false;
+      } else {
+        child.visible = true;
+      }
+    });
+    // Centralize a câmera no carro
+    camera.lookAt(carroceria.position);
+  }
+}
+
 function keyboardUpdate() {
   keyboard.update();
   //angulo de rotacai do carro
   var angle = THREE.MathUtils.degToRad(2);
   var anguloRoda = 0;
   console.log(velocidade_carro);
+
+  if (keyboard.pressed("space")) {
+    isOrbitActive = !isOrbitActive;
+    if (isOrbitActive) {
+      // Ative o OrbitControls e desative o TrackballControls
+      orbit.enabled = true;
+      trackball.enabled = false;
+    } else {
+      // Ative o TrackballControls e desative o OrbitControls
+      orbit.enabled = false;
+      trackball.enabled = true;
+    }
+    toggleInspectionMode();
+  }
 
   if (keyboard.pressed("up")) {
     velocidade_carro = 0.5;
@@ -299,7 +342,12 @@ createPista(posicaoPista);
 
 function render() {
   requestAnimationFrame(render);
+  if (isOrbitActive) {
+    orbit.update();
+  } else {
+    trackball.update();
+  }
   keyboardUpdate();
   updateCameraPosition();
-  renderer.render(scene, camera); // Render scene
+  renderer.render(scene, camera);
 }
