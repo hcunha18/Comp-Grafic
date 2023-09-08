@@ -276,7 +276,7 @@ function checkpoint(position){
     segundoCheckPoint = false;
     terceiroCheckPoint = false;
     voltas +=1;
-    voltasUI.textContent = voltas.toString();
+
     console.log(voltas);
   }
   // primeiro check point -45 -> -75 em z [x, y, z]
