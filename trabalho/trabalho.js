@@ -7,6 +7,7 @@ import {
   initDefaultBasicLight,
   setDefaultMaterial,
   InfoBox,
+  SecondaryBox,  
   onWindowResize,
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
@@ -20,6 +21,16 @@ light = initDefaultBasicLight(scene); // Create a basic light to illuminate the 
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
 let cameraOffset = new THREE.Vector3(0, 15, 30);
 let cameraLookAhead = 5.0;
+
+var VoltasMessage = new SecondaryBox("");
+VoltasMessage.box.style.bottom = "95%"
+VoltasMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
+
+function updateVoltasMessage()
+{
+   var str =  "Voltas: " + voltas ;              
+   VoltasMessage.changeMessage(str);
+}
 
 // Listen window size changes
 window.addEventListener(
@@ -35,6 +46,7 @@ let axesHelper = new THREE.AxesHelper(12);
 scene.add(axesHelper);
 var velocidade_carro = 0;
 var acelerou = false;
+let voltas = 0;
 
 // To use the keyboard
 var keyboard = new KeyboardState();
@@ -118,15 +130,12 @@ function keyboardUpdate() {
   //angulo de rotacai do carro
   var angle = THREE.MathUtils.degToRad(2);
   var anguloRoda = 0;
-  console.log(velocidade_carro);
+  // console.log(velocidade_carro);
 
-  if (keyboard.pressed("X")) {
-    if (velocidade_carro < 1)
-      velocidade_carro += 0.025;
-      roda1.rotateZ(0);
-      if (velocidade_carro > 0)
-        carroceria.translateX(velocidade_carro)
-
+  if (keyboard.pressed("up")) {
+    velocidade_carro = 0.7;
+    carroceria.translateX(velocidade_carro);
+    roda1.rotateZ(0);
   } else {
     if (velocidade_carro > 0) {
       velocidade_carro -= 0.025;
@@ -136,11 +145,9 @@ function keyboardUpdate() {
   }
 
   if (keyboard.pressed("down")) {
-    if (velocidade_carro > -0.5)
-      velocidade_carro -= 0.01;
-      velocidade_carro = Number(velocidade_carro.toFixed(2));
-      if (velocidade_carro < 0)
-        carroceria.translateX(velocidade_carro);
+    velocidade_carro = -0.5;
+    velocidade_carro = Number(velocidade_carro.toFixed(2));
+    carroceria.translateX(velocidade_carro);
   } else {
     if (velocidade_carro < 0) {
       velocidade_carro += 0.025;
@@ -160,7 +167,7 @@ function keyboardUpdate() {
     if (velocidade_carro > 0 && acelerou) {
       carroceria.rotateY(angle);
     }
-    if (keyboard.pressed("left") && keyboard.pressed("X"))
+    if (keyboard.pressed("left") && keyboard.pressed("up"))
       carroceria.rotateY(angle);
 
     if (keyboard.pressed("left") && keyboard.pressed("down"))
@@ -191,7 +198,7 @@ function keyboardUpdate() {
       cameraLookAhead = 3.0; // Volta ao valor normal quando não estiver virando
     }
 
-    if (keyboard.pressed("right") && keyboard.pressed("X"))
+    if (keyboard.pressed("right") && keyboard.pressed("up"))
       carroceria.rotateY(-angle);
 
     if (keyboard.pressed("right") && keyboard.pressed("down"))
@@ -205,6 +212,7 @@ function keyboardUpdate() {
     }
   }
 }
+
 
 // Use this to show information onscreen
 let controls = new InfoBox();
@@ -243,6 +251,43 @@ let posicaoPista = [
   [60, 0, 30],
   [60, 0, 0],
 ];
+
+let primeiroCheckPoint = false;
+let segundoCheckPoint = false;
+let terceiroCheckPoint = false;
+
+
+
+function checkpoint(position){
+  
+  if(position.x > -15 && position.x < 15 && position.z < -45 && position.z > -75){
+    primeiroCheckPoint = true;
+  }
+  if(position.x > 105 && position.x < 135 && position.z < -45 && position.z > -75 && primeiroCheckPoint == true){
+    segundoCheckPoint = true;
+    console.log(segundoCheckPoint);
+  }
+  if(position.x > -15 && position.x < 15 && position.z < 75 && position.z > 45 && segundoCheckPoint == true){
+    terceiroCheckPoint = true;
+    console.log(terceiroCheckPoint);
+  }
+  if(position.x > -15 && position.x < 15 && position.z < -15 && terceiroCheckPoint==true){
+    primeiroCheckPoint = false;     
+    segundoCheckPoint = false;
+    terceiroCheckPoint = false;
+    voltas +=1;
+    voltasUI.textContent = voltas.toString();
+    console.log(voltas);
+  }
+  // primeiro check point -45 -> -75 em z [x, y, z]
+  // primeiro check point -15 -> 15 em x 
+
+  // segundo check point 105 -> 135 em x
+  // segundo check point -45 -> -75 em z 
+  
+  // terceiro check point 45 -> 75 em z [x, y, z]
+  // terceiro check point -15 -> 15 em x 
+}
 
 function createPista(vet) {
   let posicaoLargada1 = [
@@ -300,11 +345,19 @@ function createPista(vet) {
   }
 }
 
+
 createPista(posicaoPista);
 
+
+function volta(position){
+  checkpoint(position);
+}
+
 function render() {
+  updateVoltasMessage();
   requestAnimationFrame(render);
   keyboardUpdate();
   updateCameraPosition();
+  checkpoint(carroceria.position);
   renderer.render(scene, camera); // Render scene
 }
