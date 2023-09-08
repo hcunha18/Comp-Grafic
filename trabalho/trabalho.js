@@ -201,16 +201,13 @@ function keyboardUpdate() {
   }
 }
 
+let voltas = 0;
 
-// Use this to show information onscreen
-let controls = new InfoBox();
-controls.add("Basic Scene");
-controls.addParagraph();
-controls.add("Use mouse to interact:");
-controls.add("* Left button to rotate");
-controls.add("* Right button to translate (pan)");
-controls.add("* Scroll to zoom in/out.");
-controls.show();
+
+
+// let InfoVoltas = new InfoBox();
+// InfoVoltas.add("Voltas: " + voltas);
+// InfoVoltas.show();
 
 render();
 
@@ -243,7 +240,21 @@ let posicaoPista = [
 let primeiroCheckPoint = false;
 let segundoCheckPoint = false;
 let terceiroCheckPoint = false;
-let voltas = 0;
+
+// Use this to show information onscreen
+let controle = new InfoBox();
+
+function Box() {
+  controle.add("Basic Scene");
+  controle.addParagraph();
+  controle.add("Use mouse to interact:");
+  controle.add("* Left button to rotate");
+  controle.add("* Right button to translate (pan)");
+  controle.add("* Scroll to zoom in/out.");
+}
+
+Box();
+
 
 function checkpoint(position){
   
@@ -252,11 +263,14 @@ function checkpoint(position){
   }
   if(position.x > 105 && position.x < 135 && position.z < -45 && position.z > -75 && primeiroCheckPoint == true){
     segundoCheckPoint = true;
-    console.log(segundoCheckPoint);
   }
   if(position.x > -15 && position.x < 15 && position.z < 75 && position.z > 45 && segundoCheckPoint == true){
     terceiroCheckPoint = true;
-    console.log(terceiroCheckPoint);
+  }
+  if(position.x > -15 && position.x < 15 && position.z < 75 && position.z > 45 && segundoCheckPoint==false){
+    primeiroCheckPoint = false;     
+    segundoCheckPoint = false;
+    terceiroCheckPoint = false;
   }
   if(position.x > -15 && position.x < 15 && position.z < -15 && terceiroCheckPoint==true){
     primeiroCheckPoint = false;     
