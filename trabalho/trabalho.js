@@ -136,17 +136,18 @@ function keyboardUpdate(position) {
 
   if (keyboard.pressed("X")) {
     if (reduction==true){
-      if (velocidade_carro>= 0.25){
-        velocidade_carro -=0.01;
-        // console.log(velocidade_carro);
-        // console.log(reduction);
-      }
+      velocidade_carro = 0.25
+      roda1.rotateZ(0);
+      if (velocidade_carro > 0)
+        carroceria.translateX(velocidade_carro)
     }
-    if (velocidade_carro < 0.5)
+    else{
+      if (velocidade_carro < 0.5)
       velocidade_carro += 0.025;
       roda1.rotateZ(0);
       if (velocidade_carro > 0)
         carroceria.translateX(velocidade_carro)
+    }
 
   } else {
     if (velocidade_carro > 0) {
