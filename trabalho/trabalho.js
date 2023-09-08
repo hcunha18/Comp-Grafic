@@ -125,14 +125,24 @@ function updateCameraPosition() {
   camera.lookAt(lookAtPosition);
 }
 
-function keyboardUpdate() {
+
+var reduction = false;
+
+function keyboardUpdate(position) {
   keyboard.update();
   //angulo de rotacai do carro
   var angle = THREE.MathUtils.degToRad(2);
   var anguloRoda = 0;
 
   if (keyboard.pressed("X")) {
-    if (velocidade_carro < 1)
+    if (reduction==true){
+      if (velocidade_carro>= 0.25){
+        velocidade_carro -=0.01;
+        // console.log(velocidade_carro);
+        // console.log(reduction);
+      }
+    }
+    if (velocidade_carro < 0.5)
       velocidade_carro += 0.025;
       roda1.rotateZ(0);
       if (velocidade_carro > 0)
@@ -259,7 +269,18 @@ let primeiroCheckPoint = false;
 let segundoCheckPoint = false;
 let terceiroCheckPoint = false;
 
+let positionPista = [[0, 0, -60], [120, 9999, 60]];
 
+function reducaoVelocidade(position) {
+    if((position.z <=75 && position.z>=-75 && position.x>=-15 && position.x<=15)||(position.x>=-15 && position.x <= 135 && position.z >= -75 && position.z <= -45) || (position.x>=45 && position.x<=135 && position.z >= -15 && position.z <=15) || (position.x <= 135 && position.x>=105 && position.z>=-75 && position.z<=-15) || (position.x>=45 && position.x <=75 && position.z >=-15 && position.z <=75) || (position.x >= -15 && position.x <= 75 && position.z>=45 && position.z <=75)){
+      reduction = false;
+      console.log(reduction);
+    }
+    else{
+      reduction = true;
+      console.log(reduction);
+    }
+}
 
 function checkpoint(position){
   
@@ -268,28 +289,16 @@ function checkpoint(position){
   }
   if(position.x > 105 && position.x < 135 && position.z < -45 && position.z > -75 && primeiroCheckPoint == true){
     segundoCheckPoint = true;
-    console.log(segundoCheckPoint);
   }
   if(position.x > -15 && position.x < 15 && position.z < 75 && position.z > 45 && segundoCheckPoint == true){
     terceiroCheckPoint = true;
-    console.log(terceiroCheckPoint);
   }
   if(position.x > -15 && position.x < 15 && position.z < -15 && terceiroCheckPoint==true){
     primeiroCheckPoint = false;     
     segundoCheckPoint = false;
     terceiroCheckPoint = false;
     voltas +=1;
-
-    console.log(voltas);
   }
-  // primeiro check point -45 -> -75 em z [x, y, z]
-  // primeiro check point -15 -> 15 em x 
-
-  // segundo check point 105 -> 135 em x
-  // segundo check point -45 -> -75 em z 
-  
-  // terceiro check point 45 -> 75 em z [x, y, z]
-  // terceiro check point -15 -> 15 em x 
 }
 
 function createPista(vet) {
@@ -348,9 +357,7 @@ function createPista(vet) {
   }
 }
 
-
 createPista(posicaoPista);
-
 
 function volta(position){
   checkpoint(position);
@@ -359,8 +366,9 @@ function volta(position){
 function render() {
   updateVoltasMessage();
   requestAnimationFrame(render);
-  keyboardUpdate();
+  keyboardUpdate(carroceria.position);
   updateCameraPosition();
   checkpoint(carroceria.position);
+  reducaoVelocidade(carroceria.position);
   renderer.render(scene, camera); // Render scene
 }
