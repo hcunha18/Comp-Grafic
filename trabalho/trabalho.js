@@ -120,10 +120,13 @@ function keyboardUpdate() {
   var anguloRoda = 0;
   console.log(velocidade_carro);
 
-  if (keyboard.pressed("up")) {
-    velocidade_carro = 0.5;
-    carroceria.translateX(velocidade_carro);
-    roda1.rotateZ(0);
+  if (keyboard.pressed("X")) {
+    if (velocidade_carro < 1)
+      velocidade_carro += 0.025;
+      roda1.rotateZ(0);
+      if (velocidade_carro > 0)
+        carroceria.translateX(velocidade_carro)
+
   } else {
     if (velocidade_carro > 0) {
       velocidade_carro -= 0.025;
@@ -133,9 +136,11 @@ function keyboardUpdate() {
   }
 
   if (keyboard.pressed("down")) {
-    velocidade_carro = -0.5;
-    velocidade_carro = Number(velocidade_carro.toFixed(2));
-    carroceria.translateX(velocidade_carro);
+    if (velocidade_carro > -0.5)
+      velocidade_carro -= 0.01;
+      velocidade_carro = Number(velocidade_carro.toFixed(2));
+      if (velocidade_carro < 0)
+        carroceria.translateX(velocidade_carro);
   } else {
     if (velocidade_carro < 0) {
       velocidade_carro += 0.025;
@@ -155,7 +160,7 @@ function keyboardUpdate() {
     if (velocidade_carro > 0 && acelerou) {
       carroceria.rotateY(angle);
     }
-    if (keyboard.pressed("left") && keyboard.pressed("up"))
+    if (keyboard.pressed("left") && keyboard.pressed("X"))
       carroceria.rotateY(angle);
 
     if (keyboard.pressed("left") && keyboard.pressed("down"))
@@ -186,7 +191,7 @@ function keyboardUpdate() {
       cameraLookAhead = 3.0; // Volta ao valor normal quando não estiver virando
     }
 
-    if (keyboard.pressed("right") && keyboard.pressed("up"))
+    if (keyboard.pressed("right") && keyboard.pressed("X"))
       carroceria.rotateY(-angle);
 
     if (keyboard.pressed("right") && keyboard.pressed("down"))
