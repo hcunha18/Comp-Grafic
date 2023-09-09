@@ -22,6 +22,7 @@ orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation
 let cameraOffset = new THREE.Vector3(0, 15, 30);
 let cameraLookAhead = 5.0;
 
+// contador de voltas
 var VoltasMessage = new SecondaryBox("");
 VoltasMessage.box.style.bottom = "95%"
 VoltasMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
@@ -32,6 +33,46 @@ function updateVoltasMessage()
    VoltasMessage.changeMessage(str);
 }
 
+//cronometro
+var cronometroMessage = new SecondaryBox("");
+var mensagemFinal = new SecondaryBox("");
+mensagemFinal.changeStyle("rgba(0,0,0,0)", "white", "50px", "ubuntu")
+mensagemFinal.box.style.bottom = "50%"
+
+
+cronometroMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
+cronometroMessage.box.style.bottom = "92%"
+
+
+let Segundos = 0;
+let miliSegundos = 0;
+let Minutos = 0;
+
+function updatecronometroMessage()
+{
+    var str =  Minutos+":"+Segundos+":"+miliSegundos;
+    let intervalo = setInterval(miliSegundos++, 1000);
+    if(miliSegundos == 60){
+      Segundos ++;
+      miliSegundos = 0;
+    }
+    if(Minutos == 60){
+      Horas ++;
+      Segundos = 0
+    }
+    if (voltas == 4){
+      updtadeFinalMessage()
+    }   
+    cronometroMessage.changeMessage(str);
+}
+
+function updtadeFinalMessage(){
+  var str = "Voce finalizou a corrida com o Jogo"
+  mensagemFinal.changeMessage(str)
+
+}
+
+// Listen window size changes
 // Listen window size changes
 window.addEventListener(
   "resize",
@@ -371,5 +412,10 @@ function render() {
   updateCameraPosition();
   checkpoint(carroceria.position);
   reducaoVelocidade(carroceria.position);
+  if( voltas != 4){
+    updatecronometroMessage()
+  } else {
+    updtadeFinalMessage()
+  }
   renderer.render(scene, camera); // Render scene
 }
