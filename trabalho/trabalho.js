@@ -38,6 +38,8 @@ var cronometroMessage = new SecondaryBox("");
 var mensagemFinal = new SecondaryBox("");
 mensagemFinal.changeStyle("rgba(0,0,0,0)", "white", "50px", "ubuntu")
 mensagemFinal.box.style.bottom = "50%"
+mensagemFinal.box.style.left = "30%"
+
 
 
 cronometroMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
@@ -56,8 +58,8 @@ function updatecronometroMessage()
       Segundos ++;
       miliSegundos = 0;
     }
-    if(Minutos == 60){
-      Horas ++;
+    if(Segundos == 60){
+      Minutos++;
       Segundos = 0
     }
     if (voltas == 4){
@@ -267,6 +269,55 @@ function keyboardUpdate(position) {
       roda3.rotateZ(anguloRoda);
     }
   }
+
+  if(keyboard.pressed("2")){
+    
+    let posicaoPista = [
+      [0, 0, -30],
+      [0, 0, -60],
+      [0, 0, 30],
+      [0, 0, 60],
+      [30, 0, -60],
+      [60, 0, -60],
+      [90, 0, -60],
+      [120, 0, -60],
+      [120, 0, 0],
+      [120, 0, -30],
+      [120, 0, -60],
+      [90, 0, 0],
+      [30, 0, 60],
+      [60, 0, 60],
+      [60, 0, 30],
+      [60, 0, 0],
+    ];
+    createPista(posicaoPista);
+  }
+
+  if(keyboard.pressed("1")){
+    
+    let posicaoPista = [
+      [0,0,-30],
+      [0,0,-60],
+      [0,0,30],
+      [0,0,60],
+      [30,0,-60],
+      [60,0,-60],
+      [90,0,-60],
+      [120,0,-60],
+      [120, 0 ,0],
+      [120,0,-30],
+      [120,0,-60],
+      [120,0,30],
+      [120,0,60],
+      [30,0,60],
+      [60,0,60],
+      [90,0,60],
+      [120,0,60],
+  ];
+    createPista(posicaoPista);
+  }
+
+  
 }
 
 // Use this to show information onscreen
@@ -288,24 +339,6 @@ function Graus_radianos(anguloGraus) {
 }
 
 // Adição do código da pista
-let posicaoPista = [
-  [0, 0, -30],
-  [0, 0, -60],
-  [0, 0, 30],
-  [0, 0, 60],
-  [30, 0, -60],
-  [60, 0, -60],
-  [90, 0, -60],
-  [120, 0, -60],
-  [120, 0, 0],
-  [120, 0, -30],
-  [120, 0, -60],
-  [90, 0, 0],
-  [30, 0, 60],
-  [60, 0, 60],
-  [60, 0, 30],
-  [60, 0, 0],
-];
 
 let primeiroCheckPoint = false;
 let segundoCheckPoint = false;
@@ -343,7 +376,26 @@ function checkpoint(position){
   }
 }
 
+let posicaoPista = [
+  [0, 0, -30],
+  [0, 0, -60],
+  [0, 0, 30],
+  [0, 0, 60],
+  [30, 0, -60],
+  [60, 0, -60],
+  [90, 0, -60],
+  [120, 0, -60],
+  [120, 0, 0],
+  [120, 0, -30],
+  [120, 0, -60],
+  [90, 0, 0],
+  [30, 0, 60],
+  [60, 0, 60],
+  [60, 0, 30],
+  [60, 0, 0],
+];
 function createPista(vet) {
+
   let posicaoLargada1 = [
     [-10, 0, 10],
     [-10, 0, -10],
@@ -389,7 +441,7 @@ function createPista(vet) {
   let i = 0;
   let cube = [];
   let geometry = new THREE.BoxGeometry(30, 0, 30);
-  let material = new THREE.MeshBasicMaterial({ color: 0x363636 });
+  let material = new THREE.MeshBasicMaterial({ color: "GREEN" });
 
   while (i < posicaoPista.length) {
     cube[i] = new THREE.Mesh(geometry, material);
@@ -399,7 +451,12 @@ function createPista(vet) {
   }
 }
 
-createPista(posicaoPista);
+function deletePista(){
+  for(i=posicaoPista.length; i>=0;i--){
+  scene.remove(scene.children[i]); 
+  }
+}
+
 
 function volta(position){
   checkpoint(position);
@@ -408,14 +465,17 @@ function volta(position){
 function render() {
   updateVoltasMessage();
   requestAnimationFrame(render);
-  keyboardUpdate(carroceria.position);
   updateCameraPosition();
   checkpoint(carroceria.position);
   reducaoVelocidade(carroceria.position);
-  if( voltas != 4){
+  if( voltas != 2){
     updatecronometroMessage()
+    keyboardUpdate(carroceria.position);
+
   } else {
     updtadeFinalMessage()
+    mensagemFinal.box.style.backgroundColor = "rgba(0,0,0)"
+
   }
   renderer.render(scene, camera); // Render scene
 }
