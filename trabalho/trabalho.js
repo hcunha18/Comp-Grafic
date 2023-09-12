@@ -7,7 +7,7 @@ import {
   initDefaultBasicLight,
   setDefaultMaterial,
   InfoBox,
-  SecondaryBox,  
+  SecondaryBox,
   onWindowResize,
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
@@ -19,59 +19,52 @@ camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this positi
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
-let cameraOffset = new THREE.Vector3(0, 15, 30);
 let cameraLookAhead = 5.0;
 
 // contador de voltas
 var VoltasMessage = new SecondaryBox("");
-VoltasMessage.box.style.bottom = "95%"
-VoltasMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
+VoltasMessage.box.style.bottom = "95%";
+VoltasMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu");
 
-function updateVoltasMessage()
-{
-   var str =  "Voltas: " + voltas ;              
-   VoltasMessage.changeMessage(str);
+function updateVoltasMessage() {
+  var str = "Voltas: " + voltas;
+  VoltasMessage.changeMessage(str);
 }
 
 //cronometro
 var cronometroMessage = new SecondaryBox("");
 var mensagemFinal = new SecondaryBox("");
-mensagemFinal.changeStyle("rgba(0,0,0,0)", "white", "50px", "ubuntu")
-mensagemFinal.box.style.bottom = "50%"
-mensagemFinal.box.style.left = "30%"
+mensagemFinal.changeStyle("rgba(0,0,0,0)", "white", "50px", "ubuntu");
+mensagemFinal.box.style.bottom = "50%";
+mensagemFinal.box.style.left = "30%";
 
-
-
-cronometroMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu")
-cronometroMessage.box.style.bottom = "92%"
-
+cronometroMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu");
+cronometroMessage.box.style.bottom = "92%";
 
 let Segundos = 0;
 let miliSegundos = 0;
 let Minutos = 0;
 
-function updatecronometroMessage()
-{
-    var str =  Minutos+":"+Segundos+":"+miliSegundos;
-    let intervalo = setInterval(miliSegundos++, 1000);
-    if(miliSegundos == 60){
-      Segundos ++;
-      miliSegundos = 0;
-    }
-    if(Segundos == 60){
-      Minutos++;
-      Segundos = 0
-    }
-    if (voltas == 4){
-      updtadeFinalMessage()
-    }   
-    cronometroMessage.changeMessage(str);
+function updatecronometroMessage() {
+  var str = Minutos + ":" + Segundos + ":" + miliSegundos;
+  let intervalo = setInterval(miliSegundos++, 1000);
+  if (miliSegundos == 60) {
+    Segundos++;
+    miliSegundos = 0;
+  }
+  if (Segundos == 60) {
+    Minutos++;
+    Segundos = 0;
+  }
+  if (voltas == 4) {
+    updtadeFinalMessage();
+  }
+  cronometroMessage.changeMessage(str);
 }
 
-function updtadeFinalMessage(){
-  var str = "Voce finalizou a corrida com o Jogo"
-  mensagemFinal.changeMessage(str)
-
+function updtadeFinalMessage() {
+  var str = "Voce finalizou a corrida com o Jogo";
+  mensagemFinal.changeMessage(str);
 }
 
 // Listen window size changes
@@ -157,17 +150,30 @@ carroceria.rotateY(radianos);
 scene.add(carroceria);
 
 function updateCameraPosition() {
-  let lookAtPosition = new THREE.Vector3(
-    carroceria.position.x + cameraLookAhead * Math.sin(carroceria.rotation.y),
-    carroceria.position.y,
-    carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y)
-  );
+  // Defina a distância desejada da câmera atrás do carro
+  const cameraDistance = -90; // Use um valor negativo para ficar atrás do carro
 
-  let newPosition = carroceria.position.clone().add(cameraOffset);
-  camera.position.set(newPosition.x, newPosition.y, newPosition.z);
-  camera.lookAt(lookAtPosition);
+  // Defina um ângulo para posicionar a câmera diagonalmente atrás do carro
+  const cameraAngle = Math.PI / 4; // 45 graus (ajuste conforme necessário)
+
+  // Calcule a posição da câmera com base na direção do carro e no ângulo da câmera
+  const offsetX =
+    cameraDistance * Math.sin(carroceria.rotation.y + cameraAngle);
+  const offsetY = 60; // Ajuste a altura da câmera conforme necessário
+  const offsetZ =
+    cameraDistance * Math.cos(carroceria.rotation.y + cameraAngle);
+
+  // Calcule a nova posição da câmera
+  const cameraX = carroceria.position.x - offsetX;
+  const cameraY = carroceria.position.y + offsetY;
+  const cameraZ = carroceria.position.z - offsetZ;
+
+  // Atualize a posição da câmera
+  camera.position.set(cameraX, cameraY, cameraZ);
+
+  // Configure o ponto para onde a câmera está olhando para seguir o carro
+  camera.lookAt(carroceria.position);
 }
-
 
 var reduction = false;
 
@@ -178,20 +184,15 @@ function keyboardUpdate(position) {
   var anguloRoda = 0;
 
   if (keyboard.pressed("X")) {
-    if (reduction==true){
-      velocidade_carro = 0.25
+    if (reduction == true) {
+      velocidade_carro = 0.25;
       roda1.rotateZ(0);
-      if (velocidade_carro > 0)
-        carroceria.translateX(velocidade_carro)
-    }
-    else{
-      if (velocidade_carro < 0.5)
-      velocidade_carro += 0.025;
+      if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
+    } else {
+      if (velocidade_carro < 0.5) velocidade_carro += 0.025;
       roda1.rotateZ(0);
-      if (velocidade_carro > 0)
-        carroceria.translateX(velocidade_carro)
+      if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
     }
-
   } else {
     if (velocidade_carro > 0) {
       velocidade_carro -= 0.025;
@@ -201,11 +202,9 @@ function keyboardUpdate(position) {
   }
 
   if (keyboard.pressed("down")) {
-    if (velocidade_carro > -0.5)
-      velocidade_carro -= 0.01;
-      velocidade_carro = Number(velocidade_carro.toFixed(2));
-      if (velocidade_carro < 0)
-        carroceria.translateX(velocidade_carro);
+    if (velocidade_carro > -0.5) velocidade_carro -= 0.01;
+    velocidade_carro = Number(velocidade_carro.toFixed(2));
+    if (velocidade_carro < 0) carroceria.translateX(velocidade_carro);
   } else {
     if (velocidade_carro < 0) {
       velocidade_carro += 0.025;
@@ -270,8 +269,7 @@ function keyboardUpdate(position) {
     }
   }
 
-  if(keyboard.pressed("2")){
-    
+  if (keyboard.pressed("2")) {
     let posicaoPista = [
       [0, 0, -30],
       [0, 0, -60],
@@ -293,31 +291,28 @@ function keyboardUpdate(position) {
     createPista(posicaoPista);
   }
 
-  if(keyboard.pressed("1")){
-    
+  if (keyboard.pressed("1")) {
     let posicaoPista = [
-      [0,0,-30],
-      [0,0,-60],
-      [0,0,30],
-      [0,0,60],
-      [30,0,-60],
-      [60,0,-60],
-      [90,0,-60],
-      [120,0,-60],
-      [120, 0 ,0],
-      [120,0,-30],
-      [120,0,-60],
-      [120,0,30],
-      [120,0,60],
-      [30,0,60],
-      [60,0,60],
-      [90,0,60],
-      [120,0,60],
-  ];
+      [0, 0, -30],
+      [0, 0, -60],
+      [0, 0, 30],
+      [0, 0, 60],
+      [30, 0, -60],
+      [60, 0, -60],
+      [90, 0, -60],
+      [120, 0, -60],
+      [120, 0, 0],
+      [120, 0, -30],
+      [120, 0, -60],
+      [120, 0, 30],
+      [120, 0, 60],
+      [30, 0, 60],
+      [60, 0, 60],
+      [90, 0, 60],
+      [120, 0, 60],
+    ];
     createPista(posicaoPista);
   }
-
-  
 }
 
 // Use this to show information onscreen
@@ -344,35 +339,83 @@ let primeiroCheckPoint = false;
 let segundoCheckPoint = false;
 let terceiroCheckPoint = false;
 
-let positionPista = [[0, 0, -60], [120, 9999, 60]];
+let positionPista = [
+  [0, 0, -60],
+  [120, 9999, 60],
+];
 
 function reducaoVelocidade(position) {
-    if((position.z <=75 && position.z>=-75 && position.x>=-15 && position.x<=15)||(position.x>=-15 && position.x <= 135 && position.z >= -75 && position.z <= -45) || (position.x>=45 && position.x<=135 && position.z >= -15 && position.z <=15) || (position.x <= 135 && position.x>=105 && position.z>=-75 && position.z<=-15) || (position.x>=45 && position.x <=75 && position.z >=-15 && position.z <=75) || (position.x >= -15 && position.x <= 75 && position.z>=45 && position.z <=75)){
-      reduction = false;
-      console.log(reduction);
-    }
-    else{
-      reduction = true;
-      console.log(reduction);
-    }
+  if (
+    (position.z <= 75 &&
+      position.z >= -75 &&
+      position.x >= -15 &&
+      position.x <= 15) ||
+    (position.x >= -15 &&
+      position.x <= 135 &&
+      position.z >= -75 &&
+      position.z <= -45) ||
+    (position.x >= 45 &&
+      position.x <= 135 &&
+      position.z >= -15 &&
+      position.z <= 15) ||
+    (position.x <= 135 &&
+      position.x >= 105 &&
+      position.z >= -75 &&
+      position.z <= -15) ||
+    (position.x >= 45 &&
+      position.x <= 75 &&
+      position.z >= -15 &&
+      position.z <= 75) ||
+    (position.x >= -15 &&
+      position.x <= 75 &&
+      position.z >= 45 &&
+      position.z <= 75)
+  ) {
+    reduction = false;
+    console.log(reduction);
+  } else {
+    reduction = true;
+    console.log(reduction);
+  }
 }
 
-function checkpoint(position){
-  
-  if(position.x > -15 && position.x < 15 && position.z < -45 && position.z > -75){
+function checkpoint(position) {
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < -45 &&
+    position.z > -75
+  ) {
     primeiroCheckPoint = true;
   }
-  if(position.x > 105 && position.x < 135 && position.z < -45 && position.z > -75 && primeiroCheckPoint == true){
+  if (
+    position.x > 105 &&
+    position.x < 135 &&
+    position.z < -45 &&
+    position.z > -75 &&
+    primeiroCheckPoint == true
+  ) {
     segundoCheckPoint = true;
   }
-  if(position.x > -15 && position.x < 15 && position.z < 75 && position.z > 45 && segundoCheckPoint == true){
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < 75 &&
+    position.z > 45 &&
+    segundoCheckPoint == true
+  ) {
     terceiroCheckPoint = true;
   }
-  if(position.x > -15 && position.x < 15 && position.z < -15 && terceiroCheckPoint==true){
-    primeiroCheckPoint = false;     
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < -15 &&
+    terceiroCheckPoint == true
+  ) {
+    primeiroCheckPoint = false;
     segundoCheckPoint = false;
     terceiroCheckPoint = false;
-    voltas +=1;
+    voltas += 1;
   }
 }
 
@@ -395,7 +438,6 @@ let posicaoPista = [
   [60, 0, 0],
 ];
 function createPista(vet) {
-
   let posicaoLargada1 = [
     [-10, 0, 10],
     [-10, 0, -10],
@@ -451,14 +493,13 @@ function createPista(vet) {
   }
 }
 
-function deletePista(){
-  for(i=posicaoPista.length; i>=0;i--){
-  scene.remove(scene.children[i]); 
+function deletePista() {
+  for (i = posicaoPista.length; i >= 0; i--) {
+    scene.remove(scene.children[i]);
   }
 }
 
-
-function volta(position){
+function volta(position) {
   checkpoint(position);
 }
 
@@ -468,14 +509,12 @@ function render() {
   updateCameraPosition();
   checkpoint(carroceria.position);
   reducaoVelocidade(carroceria.position);
-  if( voltas != 2){
-    updatecronometroMessage()
+  if (voltas != 2) {
+    updatecronometroMessage();
     keyboardUpdate(carroceria.position);
-
   } else {
-    updtadeFinalMessage()
-    mensagemFinal.box.style.backgroundColor = "rgba(0,0,0)"
-
+    updtadeFinalMessage();
+    mensagemFinal.box.style.backgroundColor = "rgba(0,0,0)";
   }
   renderer.render(scene, camera); // Render scene
 }
