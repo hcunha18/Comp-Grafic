@@ -19,6 +19,7 @@ camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this positi
 material = setDefaultMaterial(); // create a basic material
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
+let cameraOffset = new THREE.Vector3(-30, 25, 40);
 let cameraLookAhead = 5.0;
 
 // contador de voltas
@@ -150,31 +151,17 @@ carroceria.rotateY(radianos);
 scene.add(carroceria);
 
 function updateCameraPosition() {
-  // Defina a distância desejada da câmera atrás do carro
-  const cameraDistance = -90; // Use um valor negativo para ficar atrás do carro
+  let lookAtPosition = new THREE.Vector3(
+    carroceria.position.x + cameraLookAhead * Math.sin(carroceria.rotation.y),
+    carroceria.position.y,
+    carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y)
+  );
 
-  // Defina um ângulo para posicionar a câmera diagonalmente atrás do carro
-  const cameraAngle = Math.PI / 4; // 45 graus (ajuste conforme necessário)
-
-  // Calcule a posição da câmera com base na direção do carro e no ângulo da câmera
-  const offsetX =
-    cameraDistance * Math.sin(carroceria.rotation.y + cameraAngle);
-  const offsetY = 60; // Ajuste a altura da câmera conforme necessário
-  const offsetZ =
-    cameraDistance * Math.cos(carroceria.rotation.y + cameraAngle);
-
-  // Calcule a nova posição da câmera
-  const cameraX = carroceria.position.x - offsetX;
-  const cameraY = carroceria.position.y + offsetY;
-  const cameraZ = carroceria.position.z - offsetZ;
-
-  // Atualize a posição da câmera
-  camera.position.set(cameraX, cameraY, cameraZ);
-
-  // Configure o ponto para onde a câmera está olhando para seguir o carro
-  camera.lookAt(carroceria.position);
+  let newPosition = carroceria.position.clone().add(cameraOffset);
+  camera.position.set(newPosition.x, newPosition.y, newPosition.z);
+  camera.lookAt(lookAtPosition);
+  console.log(newPosition);
 }
-
 var reduction = false;
 
 function keyboardUpdate(position) {
