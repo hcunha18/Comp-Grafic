@@ -21,6 +21,8 @@ light = initDefaultBasicLight(scene); // Create a basic light to illuminate the 
 orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
 let cameraOffset = new THREE.Vector3(-30, 25, 40);
 let cameraLookAhead = 5.0;
+let carroceriaVisivel = true; // Assumindo que ambos estão visíveis inicialmente
+let pistas = [];
 
 // contador de voltas
 var VoltasMessage = new SecondaryBox("");
@@ -156,7 +158,6 @@ function updateCameraPosition() {
     carroceria.position.y,
     carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y)
   );
-
   let newPosition = carroceria.position.clone().add(cameraOffset);
   camera.position.set(newPosition.x, newPosition.y, newPosition.z);
   camera.lookAt(lookAtPosition);
@@ -169,6 +170,18 @@ function keyboardUpdate(position) {
   //angulo de rotacai do carro
   var angle = THREE.MathUtils.degToRad(2);
   var anguloRoda = 0;
+
+  if (keyboard.pressed("space")) {
+    if (carroceriaVisivel) {
+      // Se o carroceria e a pista são atualmente visíveis, ocultamos a pista e mostramos o carroceria
+      deletePista();
+    } else {
+      // Se o carroceria é visível mas a pista não é, mostramos ambos
+      restaurarPista();
+    }
+    carroceria.visible = true; // Garantir que o carroceria sempre seja visível
+    carroceriaVisivel = !carroceriaVisivel; // Alternar o estado
+  }
 
   if (keyboard.pressed("X")) {
     if (reduction == true) {
@@ -299,6 +312,18 @@ function keyboardUpdate(position) {
       [120, 0, 60],
     ];
     createPista(posicaoPista);
+  }
+}
+
+function deletePista() {
+  for (let pista of pistas) {
+    scene.remove(pista);
+  }
+}
+
+function restaurarPista() {
+  for (let pista of pistas) {
+    scene.add(pista);
   }
 }
 
@@ -441,48 +466,39 @@ function createPista(vet) {
   let geometry1 = new THREE.BoxGeometry(10, 0, 10);
   let material1 = new THREE.MeshBasicMaterial({ color: "black" });
   let material2 = new THREE.MeshBasicMaterial({ color: "white" });
-  let largada1 = [];
-  let largada2 = [];
 
-  let j = 0;
-  while (j < posicaoLargada1.length) {
-    largada1[j] = new THREE.Mesh(geometry1, material1);
-    largada1[j].position.set(
+  // Adicionando largada1
+  for (let j = 0; j < posicaoLargada1.length; j++) {
+    let mesh = new THREE.Mesh(geometry1, material1);
+    mesh.position.set(
       posicaoLargada1[j][0],
       posicaoLargada1[j][1],
       posicaoLargada1[j][2]
     );
-    scene.add(largada1[j]);
-    j++;
+    scene.add(mesh);
+    pistas.push(mesh); // Adicionando à lista
   }
-  let k = 0;
-  while (k < posicaoLargada2.length) {
-    largada2[k] = new THREE.Mesh(geometry1, material2);
-    largada2[k].position.set(
+
+  // Adicionando largada2
+  for (let k = 0; k < posicaoLargada2.length; k++) {
+    let mesh = new THREE.Mesh(geometry1, material2);
+    mesh.position.set(
       posicaoLargada2[k][0],
       posicaoLargada2[k][1],
       posicaoLargada2[k][2]
     );
-    scene.add(largada2[k]);
-    k++;
+    scene.add(mesh);
+    pistas.push(mesh); // Adicionando à lista
   }
 
-  let i = 0;
-  let cube = [];
+  // Adicionando os cubos da pista
   let geometry = new THREE.BoxGeometry(30, 0, 30);
   let material = new THREE.MeshBasicMaterial({ color: "GREEN" });
-
-  while (i < posicaoPista.length) {
-    cube[i] = new THREE.Mesh(geometry, material);
-    cube[i].position.set(vet[i][0], vet[i][1], vet[i][2]);
-    scene.add(cube[i]);
-    i++;
-  }
-}
-
-function deletePista() {
-  for (i = posicaoPista.length; i >= 0; i--) {
-    scene.remove(scene.children[i]);
+  for (let i = 0; i < vet.length; i++) {
+    let cube = new THREE.Mesh(geometry, material);
+    cube.position.set(vet[i][0], vet[i][1], vet[i][2]);
+    scene.add(cube);
+    pistas.push(cube); // Adicionando à lista
   }
 }
 
