@@ -79,7 +79,12 @@ function updtadeFinalMessage() {
   mensagemFinal.changeMessage(str);
 }
 
-// Listen window size changes
+function toggleCameraControls() {            
+  orbit.enabled = modoInspecao;            
+}            
+  
+
+// window size changes
 // Listen window size changes
 window.addEventListener(
   "resize",
@@ -111,6 +116,7 @@ let carroceriaGeometry = new THREE.BoxGeometry(6, 1.5, 3);
 material = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // create a basic material
 let carroceria = new THREE.Mesh(carroceriaGeometry, material);
 carroceria.position.set(0.0, 1.0, 0.0); // posicao da carroceria
+orbit.target.set(carroceria.position.x, carroceria.position.y,carroceria.position.z);
 
 //farol da carroceria
 const geomeriaFarol = new THREE.ConeGeometry(0.4, 0.25, 17);
@@ -184,15 +190,17 @@ carroceria.rotateY(radianos);
 scene.add(carroceria);
 
 function updateCameraPosition() {
-  let lookAtPosition = new THREE.Vector3(
-    carroceria.position.x + cameraLookAhead * Math.sin(carroceria.rotation.y),
-    carroceria.position.y,
-    carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y),
-  );
+  if (!modoInspecao) {
+    let lookAtPosition = new THREE.Vector3(
+      carroceria.position.x + cameraLookAhead * Math.sin(carroceria.rotation.y),
+      carroceria.position.y,
+      carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y)
+    );
 
-  let newPosition = carroceria.position.clone().add(cameraOffset);
-  camera.position.set(newPosition.x, newPosition.y, newPosition.z);
-  camera.lookAt(lookAtPosition);
+    let newPosition = carroceria.position.clone().add(cameraOffset);
+    camera.position.set(newPosition.x, newPosition.y, newPosition.z);
+    camera.lookAt(lookAtPosition);
+  }
 }
 
 var reduction = false;
@@ -213,7 +221,7 @@ function keyboardUpdate(position) {
         velocidade_carro = 0.25;
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       } else {
-        if (velocidade_carro < 0.5) velocidade_carro += 0.025;
+        if (velocidade_carro < 0.5) velocidade_carro += 0.010;
         roda1.rotateZ(0);
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       }
@@ -298,6 +306,7 @@ function keyboardUpdate(position) {
     carroceria.position.set(0.0, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
     modoInspecao = true;
+    toggleCameraControls();
     pista.clear();
   }
 
