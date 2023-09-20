@@ -575,15 +575,16 @@ function render() {
   requestAnimationFrame(render);
   updateCameraPosition();
   checkpoint(carroceria.position);
-  keyboardUpdate(carroceria.position);
 
   if (PistaEscolhida == 2) {
     reducaoVelocidade(carroceria.position);
   } else {
     reducaoVelocidade2(carroceria.position);
   }
-  if (voltas != 4 && !modoInspecao) {
+  if (voltas != 4 ) {
     updatecronometroMessage();
+    keyboardUpdate(carroceria.position);
+
   } else if (voltas == 4) {
     updtadeFinalMessage();
     mensagemFinal.box.style.backgroundColor = "rgba(0,0,0)";
