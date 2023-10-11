@@ -1,11 +1,13 @@
 import * as THREE from "../build/three.module.js";
-export { carroceria };
+export { carroceria,Farol,Farol2,roda1,roda2,roda3,roda4,ARO,ARO2,ARO3,ARO4 };
 
-
+function Graus_radianos(anguloGraus) {
+  var radianos = anguloGraus * (Math.PI / 180);
+  return radianos;
+}
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
-scene = new THREE.Scene(); // Create main scene
-orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
+scene = new THREE.Scene(); // Create main scene 
 var radianos = Graus_radianos(90);
 
 
@@ -14,7 +16,7 @@ let carroceriaGeometry = new THREE.BoxGeometry(6, 1.5, 3);
 material = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // create a basic material
 let carroceria = new THREE.Mesh(carroceriaGeometry, material);
 carroceria.position.set(0.0, 1.0, 0.0); // posicao da carroceria
-orbit.target.set(carroceria.position.x, carroceria.position.y,carroceria.position.z);
+
 
 //farol da carroceria
 const geomeriaFarol = new THREE.ConeGeometry(0.4, 0.25, 17);

@@ -11,7 +11,7 @@ import {
   onWindowResize,
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
-import { carroceria } from "./carro.js";
+import { carroceria,roda1,roda3,ARO,ARO2,ARO3,ARO4} from "./carro.js";
 import { Object3D } from "../build/three.module.js";
 
 let scene, renderer, camera, light, orbit; // Initial variables
