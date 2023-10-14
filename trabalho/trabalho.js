@@ -126,7 +126,120 @@ function updateCameraPosition() {
     camera.lookAt(lookAtPosition);
   }
 }
+let posicaoPista1 = [
+  [0, 0, -30],
+  [0, 0, -60],
+  [0, 0, 30],
+  [0, 0, 60],
+  [30, 0, -60],
+  [60, 0, -60],
+  [90, 0, -60],
+  [120, 0, -60],
+  [120, 0, 0],
+  [120, 0, -30],
+  [120, 0, -60],
+  [120, 0, 30],
+  [120, 0, 60],
+  [30, 0, 60],
+  [60, 0, 60],
+  [90, 0, 60],
+  [120, 0, 60],
+];
+let posicaoPista2 = [
+  [0, 0, -30],
+  [0, 0, -60],
+  [0, 0, 30],
+  [0, 0, 60],
+  [30, 0, -60],
+  [60, 0, -60],
+  [90, 0, -60],
+  [120, 0, -60],
+  [120, 0, 0],
+  [120, 0, -30],
+  [120, 0, -60],
+  [90, 0, 0],
+  [30, 0, 60],
+  [60, 0, 60],
+  [60, 0, 30],
+  [60, 0, 0],
+];
+let posicaoPista3 = [
+  [0, 0, -30],
+  [0, 0, -60],
+  [0, 0, 30],
+  [0, 0, 60],
+  [30, 0, -60],
+  [60, 0, -60],
+  [90, 0, -60],
+  [120, 0, -60],
+  [120, 0, 0],
+  [120, 0, -30],
+  [120, 0, -60],
+  [120, 0, 30],
+  [120, 0, 60],
+  [30, 0, 60],
+  [60, 0, 60],
+  [90, 0, 60],
+  [120, 0, 60],
+  [120, 0, -60],
+  [150, 0, -60],
+  [180, 0, -60],
+  [210, 0, -120],
+  [240, 0, -120],
+  [180, 0, -90],
+  [180, 0, -120],
+  [240, 0, -150],
+  [240, 0, -180],
+  [120, 0, -90],
+  [120, 0, -120],
+  [150, 0, -120],
+  [180, 0, -150],
+  [180, 0, -180],
+  [210, 0, -180],
+]
+let posicaoPista4 = [
+  [0, 0, -30],
+  [0, 0, -60],
+  [0, 0, 30],
+  [0, 0, 60],
+  [0, 0, 90],
+  [30, 0, 90],
+  [60, 0, 90],
+  [90, 0, 90],
+  [90, 0, 120],
+  [90, 0, 150],
+  [120, 0, 150],
+  [150, 0, 150],
+  [180, 0, 150],
+  [210, 0, 150],
+  [30, 0, -60],
+  [60, 0, -60],
+  [90, 0, -60],
+  [120, 0, -60],
+  [150, 0, -60],
+  [180, 0, -60],
+  [210, 0, -60],
+  [240, 0, -60],
+  [240, 0, -30],
+  [240, 0, 0],
+  [240, 0, 30],
+  [240, 0, 60],
+  [240, 0, 90],
+  [240, 0, 120],
+  [240, 0, 150],
+  [60, 0, 0],
+  [60, 0, -30],
+  [60, 0, 30],
+  [90, 0, 30],
+  [120, 0, 30],
+  [150, 0, 30],
+  [180, 0, 30],
+  [210, 0, 30],
+  
+  
 
+  
+];
 var reduction = false;
 
 function keyboardUpdate(position) {
@@ -145,7 +258,7 @@ function keyboardUpdate(position) {
         velocidade_carro = 0.25;
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       } else {
-        if (velocidade_carro < 0.5) velocidade_carro += 0.010;
+        if (velocidade_carro < 0.5) velocidade_carro += 0.410;
         roda1.rotateZ(0);
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       }
@@ -234,37 +347,6 @@ function keyboardUpdate(position) {
     pista.clear();
   }
 
-  if (keyboard.pressed("2")) {
-    carroceria.position.set(0.0, 1.0, 0.0);
-    carroceria.rotation.set(0, 1.5, 0);
-    PistaEscolhida = 2;
-    resetMessages();
-    modoInspecao = false;
-    pista.clear();
-
-    let posicaoPista = [
-      [0, 0, -30],
-      [0, 0, -60],
-      [0, 0, 30],
-      [0, 0, 60],
-      [30, 0, -60],
-      [60, 0, -60],
-      [90, 0, -60],
-      [120, 0, -60],
-      [120, 0, 0],
-      [120, 0, -30],
-      [120, 0, -60],
-      [90, 0, 0],
-      [30, 0, 60],
-      [60, 0, 60],
-      [60, 0, 30],
-      [60, 0, 0],
-    ];
-
-    createPista(posicaoPista, pista);
-    scene.add(pista);
-  }
-
   if (keyboard.pressed("1")) {
     modoInspecao = false;
     carroceria.position.set(0.0, 1.0, 0.0);
@@ -273,29 +355,86 @@ function keyboardUpdate(position) {
     resetMessages();
     pista.clear();
     // scene.add(carroceria)
-    let posicaoPista = [
-      [0, 0, -30],
-      [0, 0, -60],
-      [0, 0, 30],
-      [0, 0, 60],
-      [30, 0, -60],
-      [60, 0, -60],
-      [90, 0, -60],
-      [120, 0, -60],
-      [120, 0, 0],
-      [120, 0, -30],
-      [120, 0, -60],
-      [120, 0, 30],
-      [120, 0, 60],
-      [30, 0, 60],
-      [60, 0, 60],
-      [90, 0, 60],
-      [120, 0, 60],
-    ];
-    createPista(posicaoPista, pista);
+    
+    createPista(posicaoPista1, pista);
     scene.add(pista);
   }
+
+  if (keyboard.pressed("2")) {
+    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.rotation.set(0, 1.5, 0);
+    PistaEscolhida = 2;
+    resetMessages();
+    modoInspecao = false;
+    pista.clear();
+
+    createPista(posicaoPista2, pista);
+    scene.add(pista);
+  }
+
+  if (keyboard.pressed("3")) {
+    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.rotation.set(0, 1.5, 0);
+    
+    PistaEscolhida = 3;
+    resetMessages();
+    modoInspecao = false;
+    pista.clear();
+    let seta1 = setasPista3(pista)
+    createPista(posicaoPista3, pista);
+    scene.add(pista);
+  }
+
+  if (keyboard.pressed("4")) {
+    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.rotation.set(0, 1.5, 0);
+    PistaEscolhida = 4;
+    resetMessages();
+    modoInspecao = false;
+    pista.clear();
+    let seta1 = setasPista4(pista)
+    createPista(posicaoPista4, pista);
+    scene.add(pista);
+  }
+  
 }
+
+function setasPista3(pista){
+  const geometry = new THREE.CylinderGeometry( 3, 3, 0.2, 3 ); 
+  const material = new THREE.MeshBasicMaterial( {color: "BLACK"} ); 
+  const triangulo = new THREE.Mesh( geometry, material ); pista.add( triangulo );
+  triangulo.position.set(100,0,-60)
+  triangulo.rotateY(Graus_radianos(90))
+  const triangulo2 = new THREE.Mesh( geometry, material ); pista.add( triangulo2 );
+  triangulo2.position.set(140,0,-60)
+  triangulo2.rotateY(Graus_radianos(90))
+  const triangulo3 = new THREE.Mesh( geometry, material ); pista.add( triangulo3 );
+  triangulo3.position.set(180,0,-100)
+  triangulo3.rotateY(Graus_radianos(180))
+  const triangulo4 = new THREE.Mesh( geometry, material ); pista.add( triangulo4 );
+  triangulo4.position.set(180,0,-140)
+  triangulo4.rotateY(Graus_radianos(180))
+}
+
+function setasPista4(pista){
+  const geometry = new THREE.CylinderGeometry( 3, 3, 0.2, 3 ); 
+  const material = new THREE.MeshBasicMaterial( {color: "BLACK"} ); 
+  const triangulo = new THREE.Mesh( geometry, material ); pista.add( triangulo );
+  triangulo.position.set(80,0,-60)
+  triangulo.rotateY(Graus_radianos(90))
+  const triangulo2 = new THREE.Mesh( geometry, material ); pista.add( triangulo2 );
+  triangulo2.position.set(60,0,-40)
+  const triangulo3 = new THREE.Mesh( geometry, material ); pista.add( triangulo3 );
+  triangulo3.position.set(240,0,10)
+  const triangulo4 = new THREE.Mesh( geometry, material ); pista.add( triangulo4 );
+  triangulo4.position.set(240,0,50)
+
+}
+
+
+
+
+ 
 
 render();
 
@@ -316,64 +455,32 @@ let positionPista = [
   [120, 9999, 60],
 ];
 
-function reducaoVelocidade(position) {
-  if (
-    (position.z <= 75 &&
-      position.z >= -75 &&
-      position.x >= -15 &&
-      position.x <= 15) ||
-    (position.x >= -15 &&
-      position.x <= 135 &&
-      position.z >= -75 &&
-      position.z <= -45) ||
-    (position.x >= 45 &&
-      position.x <= 135 &&
+function reducVeloc(vet,position) {
+  let i=0;
+ 
+  for(i=0; i<vet.length;i++){
+    if(
+      (position.z <= (vet[i][2] + 15) &&
+      position.z >= (vet[i][2] - 15) &&
+      position.x <= (vet[i][0] + 15) &&
+      position.x >= (vet[i][0] -15)) ||(
+      position.z <= 15 &&
       position.z >= -15 &&
-      position.z <= 15) ||
-    (position.x <= 135 &&
-      position.x >= 105 &&
-      position.z >= -75 &&
-      position.z <= -15) ||
-    (position.x >= 45 &&
-      position.x <= 75 &&
-      position.z >= -15 &&
-      position.z <= 75) ||
-    (position.x >= -15 &&
-      position.x <= 75 &&
-      position.z >= 45 &&
-      position.z <= 75)
-  ) {
-    reduction = false;
-  } else {
-    reduction = true;
+      position.x <= 15 &&
+      position.x >= -15)
+    ){
+      reduction = false;
+      break
+    }
+    else{
+      reduction = true;
+    }
   }
-}
-function reducaoVelocidade2(position) {
-  if (
-    (position.z <= 75 &&
-      position.z >= -75 &&
-      position.x >= -15 &&
-      position.x <= 15) ||
-    (position.z <= 75 &&
-      position.z >= -75 &&
-      position.x >= 105 &&
-      position.x <= 135) ||
-    (position.x >= -15 &&
-      position.x <= 135 &&
-      position.z >= -75 &&
-      position.z <= -45) ||
-    (position.x >= -15 &&
-      position.x <= 135 &&
-      position.z >= 45 &&
-      position.z <= 75)
-  ) {
-    reduction = false;
-    console.log(reduction);
-  } else {
-    reduction = true;
-    console.log(reduction);
-  }
-}
+  };
+ 
+
+  
+
 
 function checkpoint(position) {
   if (
@@ -398,6 +505,86 @@ function checkpoint(position) {
     position.x < 15 &&
     position.z < 75 &&
     position.z > 45 &&
+    segundoCheckPoint == true
+  ) {
+    terceiroCheckPoint = true;
+  }
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < -15 &&
+    terceiroCheckPoint == true
+  ) {
+    primeiroCheckPoint = false;
+    segundoCheckPoint = false;
+    terceiroCheckPoint = false;
+    voltas += 1;
+  }
+}
+
+function checkpoint2(position) {
+  if (
+    position.x > 165 &&
+    position.x < 195 &&
+    position.z < -45 &&
+    position.z > -75
+  ) {
+    primeiroCheckPoint = true;
+  }
+  if (
+    position.x > 165 &&
+    position.x < 195 &&
+    position.z > -195 &&
+    position.z < -165 &&
+    primeiroCheckPoint == true
+  ) {
+    segundoCheckPoint = true;
+  }
+  if (
+    position.x > 105 &&
+    position.x < 135 &&
+    position.z < 75 &&
+    position.z > 45 &&
+    segundoCheckPoint == true
+  ) {
+    terceiroCheckPoint = true;
+  }
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < -15 &&
+    terceiroCheckPoint == true
+  ) {
+    primeiroCheckPoint = false;
+    segundoCheckPoint = false;
+    terceiroCheckPoint = false;
+    voltas += 1;
+  }
+}
+
+function checkpoint3(position) {
+  if (
+    position.x > 225 &&
+    position.x < 255 &&
+    position.z < 165 &&
+    position.z > 135
+  ) {
+    primeiroCheckPoint = true;
+  }
+  if (
+    position.x > 75 &&
+    position.x < 105 &&
+    position.z > 135 &&
+    position.z < 165 &&
+    primeiroCheckPoint == true
+  ) {
+    segundoCheckPoint = true;
+  }
+  if (
+    position.x > -15 &&
+    position.x < 15 &&
+    position.z < 105 &&
+    position.z > 75 &&
     segundoCheckPoint == true
   ) {
     terceiroCheckPoint = true;
@@ -480,9 +667,9 @@ function createPista(vet, pista) {
   let i = 0;
   let cube = [];
   let geometry = new THREE.BoxGeometry(30, 0, 30);
-  let material = new THREE.MeshBasicMaterial({ color: "GREEN" });
+  let material = new THREE.MeshBasicMaterial({ color: 0X2D4870 });
 
-  while (i < posicaoPista.length) {
+  while (i < vet.length) {
     cube[i] = new THREE.Mesh(geometry, material);
     cube[i].position.set(vet[i][0], vet[i][1], vet[i][2]);
     pista.add(cube[i]);
@@ -498,12 +685,23 @@ function render() {
   updateVoltasMessage();
   requestAnimationFrame(render);
   updateCameraPosition();
-  checkpoint(carroceria.position);
+  
 
   if (PistaEscolhida == 2) {
-    reducaoVelocidade(carroceria.position);
-  } else {
-    reducaoVelocidade2(carroceria.position);
+    checkpoint(carroceria.position);
+    reducVeloc(posicaoPista2, carroceria.position);
+  }
+  if(PistaEscolhida == 1){
+    checkpoint(carroceria.position);
+    reducVeloc(posicaoPista1, carroceria.position);
+  }
+  if(PistaEscolhida == 3){
+    checkpoint2(carroceria.position);
+    reducVeloc(posicaoPista3, carroceria.position);
+  }
+  if(PistaEscolhida == 4){
+    checkpoint3(carroceria.position);
+    reducVeloc(posicaoPista4, carroceria.position);
   }
   if (voltas != 4 ) {
     updatecronometroMessage();
