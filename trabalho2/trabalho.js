@@ -12,7 +12,8 @@ import {
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
 
-import { carroceria, roda1, roda3, ARO, ARO2, ARO3, ARO4 } from "./carro.js";
+// import { carroceria, roda1, roda3, ARO, ARO2, ARO3, ARO4 } from "./carro.js";
+import { carroceria,torus,torus1,torus2,torus3,heixo_dianteiro } from "./exempleCar.js";
 import {
   createPista,
   checkpoint,
@@ -137,16 +138,16 @@ function keyboardUpdate(position) {
 
   if (!modoInspecao) {
     if (keyboard.pressed("X")) {
-      ARO.rotation.z += velocidade_carro / 3;
-      ARO2.rotation.z += velocidade_carro / 3;
-      ARO3.rotation.z += velocidade_carro / 3;
-      ARO4.rotation.z += velocidade_carro / 3;
+      torus.rotation.z += velocidade_carro / 3;
+      torus1.rotation.z += velocidade_carro / 3;
+      torus2.rotation.z += velocidade_carro / 3;
+      torus3.rotation.z += velocidade_carro / 3;
       if (reduction == true) {
         velocidade_carro = 0.25;
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       } else {
         if (velocidade_carro < 0.5) velocidade_carro += 0.01;
-        roda1.rotateZ(0);
+        torus.rotateZ(0);
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       }
     } else {
@@ -171,12 +172,11 @@ function keyboardUpdate(position) {
 
     if (keyboard.pressed("left")) {
       //rotacao das rodas
-      if (roda1.rotation.z > Graus_radianos(-30)) {
+      if (heixo_dianteiro.rotation.z > Graus_radianos(-30)) {
         anguloRoda -= Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        roda1.rotateZ(anguloRoda);
-        roda3.rotateZ(anguloRoda);
-      }
+        heixo_dianteiro.rotateX(anguloRoda);
+      }''
       if (velocidade_carro > 0 && acelerou) {
         carroceria.rotateY(angle);
       }
@@ -186,20 +186,18 @@ function keyboardUpdate(position) {
       if (keyboard.pressed("left") && keyboard.pressed("down"))
         carroceria.rotateY(-angle);
     } else {
-      if (roda1.rotation.z < Graus_radianos(0)) {
+      if (heixo_dianteiro.rotation.z < Graus_radianos(0)) {
         anguloRoda += Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        roda1.rotateZ(anguloRoda);
-        roda3.rotateZ(anguloRoda);
+        heixo_dianteiro.rotateX(anguloRoda);
       }
     }
     if (keyboard.pressed("right")) {
       //rotacao das rodas
-      if (roda1.rotation.z < Graus_radianos(30)) {
+      if (heixo_dianteiro.rotation.z < Graus_radianos(30)) {
         anguloRoda += Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        roda1.rotateZ(anguloRoda);
-        roda3.rotateZ(anguloRoda);
+        heixo_dianteiro.rotateX(anguloRoda);
       }
       if (velocidade_carro > 0 && acelerou) {
         carroceria.rotateY(-angle);
@@ -217,11 +215,10 @@ function keyboardUpdate(position) {
       if (keyboard.pressed("right") && keyboard.pressed("down"))
         carroceria.rotateY(angle);
     } else {
-      if (roda1.rotation.z > Graus_radianos(0)) {
+      if (torus.rotation.z > Graus_radianos(0)) {
         anguloRoda -= Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        roda1.rotateZ(anguloRoda);
-        roda3.rotateZ(anguloRoda);
+        heixo_dianteiro.rotateX(anguloRoda);
       }
     }
   }

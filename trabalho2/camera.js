@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { initCamera } from "../libs/util/util.js";
 import { OrbitControls } from "../build/jsm/controls/OrbitControls.js";
-import { carroceria } from "./carro.js";
+// import { carroceria } from "./carro.js";
+import { carroceria } from "./exempleCar.js";
 import {
   modoInspecao,
   camera,
