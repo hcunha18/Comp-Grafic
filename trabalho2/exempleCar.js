@@ -46,14 +46,20 @@ var objectMaterial1 = new THREE.MeshLambertMaterial({
   opacity: 1,
   transparent: true});
 
+var objectMaterial2 = new THREE.MeshLambertMaterial({
+  color: "#896050",
+  opacity: 1,
+  transparent: true});
+
 // DETALHE RODA, AINDA N IMPLEMENTADO
-// const geometry = new THREE.BoxGeometry( 0.8, 0.1, 0.3 );
-// const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
-// const cube = new THREE.Mesh( geometry, material );
-// cube.rotateX(THREE.MathUtils.degToRad(-90));
-// cube.rotateY(THREE.MathUtils.degToRad(-90));
-// cube.rotateZ(THREE.MathUtils.degToRad(-10));
-// cube.position.set(4.75,2,8.5);
+const geometry = new THREE.BoxGeometry( 0.8, 0.1, 0.3 );
+const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+const cube = new THREE.Mesh( geometry, material );
+cube.rotateX(THREE.MathUtils.degToRad(-90));
+cube.rotateY(THREE.MathUtils.degToRad(-90));
+cube.rotateZ(THREE.MathUtils.degToRad(-10));
+cube.position.set(4.75,2,8.5);
+
 // scene.add(cube);
 
 const geometriaTorus = new THREE.TorusGeometry(1, 0.6, 13, 30);
@@ -63,7 +69,7 @@ const heixo_dianteiro = new Object3D();
 const heixo_traseiro = new Object3D();
 
 
-const torus = new THREE.Mesh(geometriaTorus, objectMaterial1);
+const torus = new THREE.Mesh(geometriaTorus, objectMaterial2);
 const torus1 = new THREE.Mesh(geometriaTorus, objectMaterial1);
 const torus2 = new THREE.Mesh(geometriaTorus, objectMaterial1);
 const torus3 = new THREE.Mesh(geometriaTorus, objectMaterial1);
@@ -144,6 +150,8 @@ var carroceria = null;
 var pointCloudVisibility = true;
 var objectVisibility = true;
 var castShadow = true;
+
+
 
 // Create convex object the first time
 updateConvexObject();
@@ -312,7 +320,7 @@ function createConvex_topo_frente(){
 }
 createConvex_topo_frente();
 generatePoints_topo_frente();
-
+torus.add(cube);
 
 
 // gerar objeto convexo a partir dessa estrutura

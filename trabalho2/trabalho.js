@@ -29,10 +29,9 @@ import {
   setasPista3,
   setasPista4,
 } from "./Pista.js";
-import { updateCameraPosition, toggleCameraControls } from "./camera.js";
+import { updateCameraPosition, toggleCameraControls,cameraMode } from "./camera.js";
 export { modoInspecao, camera, orbit, cameraOffset, cameraLookAhead };
 import { Object3D } from "../build/three.module.js";
-import { cameraMode } from "./camera.js";
 
 let scene, light; // Initial variables
 let renderer = initRenderer(); // Init a basic renderer
@@ -47,6 +46,7 @@ light = initDefaultBasicLight(scene); // Create a basic light to illuminate the 
 let modoInspecao = true;
 let pista = new THREE.Object3D();
 let PistaEscolhida = 0;
+
 
 
 // contador de voltas
@@ -143,16 +143,18 @@ function keyboardUpdate(position) {
 
   if (!modoInspecao) {
     if (keyboard.pressed("X")) {
-      torus.rotation.z += velocidade_carro / 3;
-      torus1.rotation.z += velocidade_carro / 3;
-      torus2.rotation.z += velocidade_carro / 3;
-      torus3.rotation.z += velocidade_carro / 3;
+        // roda girar quando anda 
+      // torus.translateX+= velocidade_carro / 3;
+      // torus1.translateX += velocidade_carro / 3;
+      // torus2.translateX += velocidade_carro / 3;
+      // torus3.translateX += velocidade_carro / 3;
+
       if (reduction == true) {
         velocidade_carro = 0.25;
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       } else {
         if (velocidade_carro < 0.5) velocidade_carro += 0.01;
-        torus.rotateZ(0);
+        // torus.rotateZ(0);
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       }
     } else {
@@ -175,13 +177,14 @@ function keyboardUpdate(position) {
     }
     if (keyboard.pressed("left")) {
       //rotacao das rodas
-      if (heixo_dianteiro.rotation.z > Graus_radianos(-30)) {
-        anguloRoda -= Graus_radianos(1);
+      if (torus.rotation.y < Graus_radianos(30)) {
+        anguloRoda += Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        heixo_dianteiro.rotateX(anguloRoda);
-      }''
+        torus.rotateY(anguloRoda);
+        torus1.rotateY(anguloRoda);
+      }
       if (velocidade_carro > 0 && acelerou) {
-        carroceria.rotateY(angle);
+        carroceria.rotateY(angle)
       }
       if (keyboard.pressed("left") && keyboard.pressed("X"))
         carroceria.rotateY(angle);
@@ -189,18 +192,20 @@ function keyboardUpdate(position) {
       if (keyboard.pressed("left") && keyboard.pressed("down"))
         carroceria.rotateY(-angle);
     } else {
-      if (heixo_dianteiro.rotation.z < Graus_radianos(0)) {
-        anguloRoda += Graus_radianos(1);
+      if (torus.rotation.y > Graus_radianos(0)) {
+        anguloRoda -= Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        heixo_dianteiro.rotateX(anguloRoda);
+        torus.rotateY(anguloRoda);
+        torus1.rotateY(anguloRoda);
       }
     }
     if (keyboard.pressed("right")) {
       //rotacao das rodas
-      if (heixo_dianteiro.rotation.z < Graus_radianos(30)) {
-        anguloRoda += Graus_radianos(1);
+      if (torus.rotation.y > Graus_radianos(-30)) {
+        anguloRoda -= Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        heixo_dianteiro.rotateX(anguloRoda);
+        torus.rotateY(anguloRoda);
+        torus1.rotateY(anguloRoda);
       }
       if (velocidade_carro > 0 && acelerou) {
         carroceria.rotateY(-angle);
@@ -218,28 +223,20 @@ function keyboardUpdate(position) {
       if (keyboard.pressed("right") && keyboard.pressed("down"))
         carroceria.rotateY(angle);
     } else {
-      if (torus.rotation.z > Graus_radianos(0)) {
-        anguloRoda -= Graus_radianos(1);
+      if (torus.rotation.y  < Graus_radianos(0)) {
+        anguloRoda += Graus_radianos(1);
         anguloRoda = Number(anguloRoda.toFixed(2));
-        heixo_dianteiro.rotateX(anguloRoda);
+        torus.rotateY(anguloRoda);
+        torus1.rotateY(anguloRoda);
       }
     }
   }
 
   if (keyboard.down("space")) {
-    if (!lastSpacePress) {
-      console.log("Trocando modo da câmera"); // Para depuração
-      cameraMode = (cameraMode + 1) % 3;
-      updateCameraPosition(); // Atualiza a posição da câmera conforme o novo modo
-      // Atualizar o display do modo da câmera
-      document.getElementById(
-        "cameraModeDisplay"
-      ).innerText = `Modo da Câmera: ${cameraMode}`;
-      lastSpacePress = true; // Seta a flag para evitar repetições contínuas
-    }
-  } else {
-    lastSpacePress = false; // Reseta a flag quando a tecla espaço é liberada
-  }
+    console.log("apertou espaço")
+    cameraMode = 1
+
+  } 
   if (keyboard.pressed("1")) {
     modoInspecao = false;
     carroceria.position.set(0.0, 1.0, 0.0);
@@ -308,6 +305,7 @@ dirLight.shadow.camera.bottom = -50;
 scene.add(dirLight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); // cor e intensidade
 scene.add(ambientLight);
+
 
 render();
 

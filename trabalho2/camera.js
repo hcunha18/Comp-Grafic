@@ -10,9 +10,10 @@ import {
   cameraOffset,
   cameraLookAhead,
 } from "./trabalho.js ";
-export { updateCameraPosition, toggleCameraControls };
+export { updateCameraPosition, toggleCameraControls, cameraMode };
 
-export var cameraMode = 0; // 0: 3ª pessoa, 1: Seguindo o Carro, 2: Inspeção
+let cameraMode = 0;
+
 let smoothness = 0.05;
 
 function toggleCameraControls() {
@@ -22,65 +23,43 @@ function toggleCameraControls() {
 function updateCameraPosition() {
   console.log("Chamada updateCameraPosition - cameraMode atual:", cameraMode);
   let offset, matrix; // Declarar as variáveis fora do switch
-  switch (cameraMode) {
-    case 0: // Modo 3ª pessoa
-      offset = new THREE.Vector3(-20, 5, 2); // Ajuste conforme necessário
 
-      matrix = new THREE.Matrix4(); // Inicializar a matriz
-      matrix.extractRotation(carroceria.matrix); // Obter a matriz de rotação do carro
+  if (cameraMode == 0) {
+    // Modo 3ª pessoa
+    offset = new THREE.Vector3(-20, 5, 2); // Ajuste conforme necessário
 
-      // Multiplicar o deslocamento pela matriz de rotação para alinhar com a direção do carro
-      offset.applyMatrix4(matrix);
+    matrix = new THREE.Matrix4(); // Inicializar a matriz
+    matrix.extractRotation(carroceria.matrix); // Obter a matriz de rotação do carro
 
-      // Posicionar a câmera atrás do carro, com base no offset ajustado
-      let cameraPosition = carroceria.position.clone().add(offset);
-      camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    // Multiplicar o deslocamento pela matriz de rotação para alinhar com a direção do carro
+    offset.applyMatrix4(matrix);
 
-      // Fazer a câmera olhar para o carro
-      camera.lookAt(carroceria.position);
-      break;
+    // Posicionar a câmera atrás do carro, com base no offset ajustado
+    let cameraPosition = carroceria.position.clone().add(offset);
+    camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
-    case 1: // Modo Seguindo o Carro
-      offset = new THREE.Vector3(0, 5, 10); // Ajuste o offset conforme necessário
-
-      matrix = new THREE.Matrix4(); // Reutilizar a variável, apenas reatribuindo o valor
-      matrix.extractRotation(carroceria.matrix);
-
-      // Aplicar a rotação ao offset
-      offset.applyMatrix4(matrix);
-
-      // Atualizar a posição da câmera para ficar atrás do carro
-      let followPosition = carroceria.position.clone().sub(offset);
-      camera.position.set(followPosition.x, followPosition.y, followPosition.z);
-
-      // Fazer a câmera olhar para o carro (ou para a direção do movimento)
-      camera.lookAt(carroceria.position);
-      break;
-
-    case 2: // Modo de Inspeção
-      console.log("Pista visível:", pista.visible);
-      // Definir visibilidade da pista, se necessário
-      pista.visible = false;
-      console.log(
-        "Pista deve estar invisível agora. Pista visível:",
-        pista.visible
-      );
-      // Definir posição da câmera
-      offset = new THREE.Vector3(0, -10, -30);
-      let inspectPosition = carroceria.position.clone().sub(offset);
-      camera.position.set(
-        inspectPosition.x,
-        inspectPosition.y,
-        inspectPosition.z
-      );
-      // Habilitar controles interativos
-      controls.enabled = true;
-      controls.target.set(
-        carroceria.position.x,
-        carroceria.position.y,
-        carroceria.position.z
-      );
-      controls.update();
-      break;
+    // Fazer a câmera olhar para o carro
+    camera.lookAt(carroceria.position);
   }
+
+  if (cameraMode == 1) {
+    // Modo Seguindo o Carro
+
+    let lookAtPosition = new THREE.Vector3(
+      carroceria.position.x + cameraLookAhead * Math.sin(carroceria.rotation.y),
+      carroceria.position.y,
+      carroceria.position.z + cameraLookAhead * Math.cos(carroceria.rotation.y)
+    );
+
+    let newPosition = carroceria.position.clone().add(cameraOffset);
+    camera.position.set(newPosition.x, newPosition.y, newPosition.z);
+    camera.lookAt(lookAtPosition);
+  }
+  if (cameraMode == 2) {
+    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.rotation.set(0, 1.5, 0);
+    modoInspecao = true;
+    toggleCameraControls();
+    pista.clear();
+  } // Modo de Inspeção
 }
