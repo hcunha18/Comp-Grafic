@@ -32,19 +32,22 @@ import {
 import { updateCameraPosition, toggleCameraControls } from "./camera.js";
 export { modoInspecao, camera, orbit, cameraOffset, cameraLookAhead };
 import { Object3D } from "../build/three.module.js";
+import { cameraMode } from "./camera.js";
 
 let scene, light; // Initial variables
 let renderer = initRenderer(); // Init a basic renderer
-let camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+let camera = initCamera(new THREE.Vector3(0, 15, 32)); // Init camera in this position
 let orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
-let cameraOffset = new THREE.Vector3(-30, 25, 40);
+let cameraOffset = new THREE.Vector3(-30, 45, 40);
 let cameraLookAhead = 5;
 scene = new THREE.Scene(); // Create main scene
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 let modoInspecao = true;
 let pista = new THREE.Object3D();
 let PistaEscolhida = 0;
-let cameraMode = 0; // Inicie no modo que preferir
+
 
 // contador de voltas
 var VoltasMessage = new SecondaryBox("");
@@ -130,6 +133,8 @@ scene.add(plane);
 
 scene.add(carroceria);
 
+let lastSpacePress = false;
+
 function keyboardUpdate(position) {
   keyboard.update();
   //angulo de rotacai do carro
@@ -157,7 +162,6 @@ function keyboardUpdate(position) {
         carroceria.translateX(velocidade_carro);
       }
     }
-
     if (keyboard.pressed("down")) {
       if (velocidade_carro > -0.5) velocidade_carro -= 0.01;
       velocidade_carro = Number(velocidade_carro.toFixed(2));
@@ -169,7 +173,6 @@ function keyboardUpdate(position) {
         carroceria.translateX(velocidade_carro);
       }
     }
-
     if (keyboard.pressed("left")) {
       //rotacao das rodas
       if (heixo_dianteiro.rotation.z > Graus_radianos(-30)) {
@@ -224,14 +227,19 @@ function keyboardUpdate(position) {
   }
 
   if (keyboard.down("space")) {
-    carroceria.position.set(0.0, 1.0, 0.0);
-    carroceria.rotation.set(0, 1.5, 0);
-    modoInspecao = true;
-    toggleCameraControls();
-    pista.clear();
-    cameraMode = (cameraMode + 1) % 3; // Isso fará a variável alternar entre 0, 1 e 2
+    if (!lastSpacePress) {
+      console.log("Trocando modo da câmera"); // Para depuração
+      cameraMode = (cameraMode + 1) % 3;
+      updateCameraPosition(); // Atualiza a posição da câmera conforme o novo modo
+      // Atualizar o display do modo da câmera
+      document.getElementById(
+        "cameraModeDisplay"
+      ).innerText = `Modo da Câmera: ${cameraMode}`;
+      lastSpacePress = true; // Seta a flag para evitar repetições contínuas
+    }
+  } else {
+    lastSpacePress = false; // Reseta a flag quando a tecla espaço é liberada
   }
-
   if (keyboard.pressed("1")) {
     modoInspecao = false;
     carroceria.position.set(0.0, 1.0, 0.0);
@@ -256,11 +264,9 @@ function keyboardUpdate(position) {
     createPista(posicaoPista2, pista);
     scene.add(pista);
   }
-
   if (keyboard.pressed("3")) {
     carroceria.position.set(0.0, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
-
     PistaEscolhida = 3;
     resetMessages();
     modoInspecao = false;
@@ -269,7 +275,6 @@ function keyboardUpdate(position) {
     createPista(posicaoPista3, pista);
     scene.add(pista);
   }
-
   if (keyboard.pressed("4")) {
     carroceria.position.set(0.0, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
@@ -283,12 +288,44 @@ function keyboardUpdate(position) {
   }
 }
 
+let lightColor = "rgb(255,255,255)";
+let lightPosition = new THREE.Vector3(45.0, 50.0, 50.0);
+let dirLight = new THREE.DirectionalLight(lightColor);
+
+dirLight.position.copy(lightPosition);
+dirLight.castShadow = true;
+
+dirLight.position.copy(lightPosition);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 512;
+dirLight.shadow.mapSize.height = 512;
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 200;
+dirLight.shadow.camera.left = -50;
+dirLight.shadow.camera.right = 50;
+dirLight.shadow.camera.top = 50;
+dirLight.shadow.camera.bottom = -50;
+scene.add(dirLight);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); // cor e intensidade
+scene.add(ambientLight);
+
 render();
 
 function render() {
   updateVoltasMessage();
   requestAnimationFrame(render);
   updateCameraPosition();
+//Atualiza a posição da spotlight para coincidir com a da câmera
+  dirLight.position.set(
+    camera.position.x,
+    camera.position.y,
+    camera.position.z
+  );
+  dirLight.target.position.set(
+    carroceria.position.x,
+    carroceria.position.y,
+    carroceria.position.z
+  );
 
   if (PistaEscolhida == 1) {
     checkpoint(carroceria.position);
