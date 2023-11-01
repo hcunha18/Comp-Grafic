@@ -191,7 +191,7 @@ var castShadow = true;
 
 
 // Create convex object the first time
-updateConvexObject();
+
 
 // gerar pontos de um objeto convexo
 function generatePoints(numberOfPoints)
@@ -359,6 +359,15 @@ createConvex_topo_frente();
 generatePoints_topo_frente();
 // torus.add(cube);
 
+// vidro
+const geometryVidro = new THREE.BoxGeometry( 3.5, 5, 0.2 );
+const materialVidro = new THREE.MeshPhongMaterial( {color: "#000"} );
+var vidro = new THREE.Mesh(geometryVidro, materialVidro);
+vidro.position.set(4.5, 5.1, 4);
+vidro.rotateX(THREE.MathUtils.degToRad(-90));
+vidro.rotateY(THREE.MathUtils.degToRad(15));
+var objectVidro = new THREE.Object3D();
+objectVidro.add(vidro);
 
 // gerar objeto convexo a partir dessa estrutura
 function updateConvexObject( )
@@ -379,10 +388,11 @@ function updateConvexObject( )
   // Object = Carroceria
   carroceria.add(heixo_dianteiro);
   carroceria.add(heixo_traseiro);
-
+     
+  carroceria.add(objectVidro);
   // Uncomment to view debug information of the renderer
   //console.log(renderer.info);
 }
 
-
+updateConvexObject();
 carroceria.scale.set(0.5,0.5,0.5);
