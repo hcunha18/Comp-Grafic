@@ -9,7 +9,7 @@ import {initRenderer,
         lightFollowingCamera} from "../libs/util/util.js";
 import { Object3D, Scene, Vector3 } from '../build/three.module.js';
 
-export{carroceria,torus,torus1,torus2,torus3,heixo_dianteiro,heixo_traseiro,Aro,Aro1,Aro2,Aro3,Aro4,Aro5,Aro6,Aro7}
+export{carroceria,torus,torus1,torus2,torus3,heixo_dianteiro ,Aro, Aro1, Aro2, Aro3, Aro4, Aro5, Aro6, Aro7}
 
 // var light = initDefaultSpotlight(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 
@@ -165,11 +165,6 @@ heixo_traseiro.add(Aro5);
 heixo_traseiro.add(Aro6);
 heixo_traseiro.add(Aro7);
 
-torus.castShadow = true;
-torus1.castShadow = true;
-torus2.castShadow = true;
-torus3.castShadow = true;
-
 
 
 
@@ -189,78 +184,80 @@ var objectSize = 10;
 var convexGeometry = null;
 var convexGeometry1 = null;
 var carroceria = null;
-
 var pointCloudVisibility = true;
 var objectVisibility = true;
 var castShadow = true;
 
+
+
 // Create convex object the first time
+
 
 // gerar pontos de um objeto convexo
 function generatePoints(numberOfPoints)
 {
   var points = [];
 //   base inferior
-  var X = 8;
-  var Y = 2;
+  var X = 7.8;
+  var Y = 1.6;
   var Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
-  X = -8;
-  Y = 2;
+  X = -7.8;
+  Y = 1.6;
   Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
-  X = 8;
-  Y = 2;
+  X = 7.8;
+  Y = 1.6;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
-  X = -8;
-  Y = 2;
+  X = -7.8;
+  Y = 1.6;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
-  X = 9;
-  Y = 2;
+  X = 8.8;
+  Y = 1.6;
   Z = 7,5;
   points.push(new THREE.Vector3(X, Y, Z));
 
-  X = 9;
-  Y = 2;
+  X = 8.8;
+  Y = 1.6;
   Z = 1,5;
   points.push(new THREE.Vector3(X, Y, Z));
 
 //   base superior
   X = 8;
-  Y = 4;
+  Y = 3.6;
   Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
   X = -8;
-  Y = 4;
+  Y = 3.6;
   Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 8;
-  Y = 4;
+  Y = 3.6;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
   X = -8;
-  Y = 4;
+  Y = 3.6;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 9;
-  Y = 4;
+  Y = 3.6;
   Z = 7,5;
   points.push(new THREE.Vector3(X, Y, Z));
 
   X = 9;
-  Y = 4;
+  Y = 3.6;
   Z = 1,5;
   points.push(new THREE.Vector3(X, Y, Z));
 
 //
   X = 1;
-  Y = 6;
+  Y = 5.6;
   Z = 1,5;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 1;
-  Y = 6;
+  Y = 5.6;
   Z = 7,5;
   points.push(new THREE.Vector3(X, Y, Z));
 
@@ -280,40 +277,50 @@ function generatePoints(numberOfPoints)
   return points;
 }
 
+
+
+
+
+
+
+
+
+
+
 // função para gerar a parte da frente do topo
 function generatePoints_topo_frente(numberOfPoints)
 {
   var points = [];
   var X = 8;
-  var Y = 7;
+  var Y = 6.6;
   var Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 8;
-  Y = 7;
+  Y = 6.6;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 9;
-  Y = 7;
+  Y = 6.6;
   Z = 7,5;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 9;
-  Y = 7;
+  Y = 6.6;
   Z = 1,5;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 1;
-  Y = 9;
+  Y = 8.6;
   Z = 1,5;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 1;
-  Y = 9;
+  Y = 8.6;
   Z = 7,5;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 1;
-  Y = 7.4;
+  Y = 7;
   Z = 0;
   points.push(new THREE.Vector3(X, Y, Z));
   X = 1;
-  Y = 7.4;
+  Y = 7;
   Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
 
@@ -350,17 +357,154 @@ function createConvex_topo_frente(){
 }
 createConvex_topo_frente();
 generatePoints_topo_frente();
-// torus.add(Aro);
+// torus.add(cube);
 
 // vidro
-const geometryVidro = new THREE.BoxGeometry( 3.5, 5, 0.2 );
-const materialVidro = new THREE.MeshPhongMaterial( {color: "#000"} );
+const geometryVidro = new THREE.BoxGeometry( 5, 5, 0.2 );
+const materialVidro = new THREE.MeshPhongMaterial( {color: "#03000f"} );
 var vidro = new THREE.Mesh(geometryVidro, materialVidro);
-vidro.position.set(4.5, 5.1, 4);
+vidro.position.set(4.5, 4.7, 4);
 vidro.rotateX(THREE.MathUtils.degToRad(-90));
 vidro.rotateY(THREE.MathUtils.degToRad(15));
 var objectVidro = new THREE.Object3D();
 objectVidro.add(vidro);
+
+// farol dianteiro
+const geometryFarol = new THREE.BoxGeometry( 0.5, 0.2, 6 );
+const materialFarol = new THREE.MeshPhongMaterial( {color: "#F0F8FF"} );
+var farol = new THREE.Mesh(geometryFarol, materialFarol);
+farol.position.set(8.8, 3.5, 4);
+var objectFarol = new THREE.Object3D();
+objectFarol.add(farol);
+
+// farol traseiro
+const geometryFarol2 = new THREE.BoxGeometry( 0.5, 0.2, 7.9 );
+const materialFarol2 = new THREE.MeshPhongMaterial( {color: "#f0d046"} );
+var farol2 = new THREE.Mesh(geometryFarol2, materialFarol2);
+farol2.position.set(-7.8, 3.5, 4);
+var objectFarol2 = new THREE.Object3D();
+objectFarol2.add(farol2);
+
+//parachoque baixo traseiro
+const geometryParachoque = new THREE.BoxGeometry( 1.8, 0.3, 8.5 );
+const materialParachoque = new THREE.MeshPhongMaterial( {color: "#03000f"} );
+var parachoque = new THREE.Mesh(geometryParachoque, materialParachoque);
+parachoque.position.set(-7, 1.5, 4);
+var objectparachoque = new THREE.Object3D();
+objectparachoque.add(parachoque);
+
+// parachoque traseiro \
+const geometryParachoque2 = new THREE.BoxGeometry( 2, 0.3, 8.5 );
+var parachoque2 = new THREE.Mesh(geometryParachoque2, materialParachoque);
+parachoque2.position.set(-6, 2.5, 4);
+parachoque2.rotateZ(THREE.MathUtils.degToRad(70));
+var objectparachoque2 = new THREE.Object3D();
+objectparachoque2.add(parachoque2);
+// parachoque traseiro ___
+const geometryParachoque3 = new THREE.BoxGeometry( 2.6, 0.3, 8.5 );
+var parachoque3 = new THREE.Mesh(geometryParachoque3, materialParachoque);
+parachoque3.position.set(-4.5, 3.35, 4);
+var objectparachoque3 = new THREE.Object3D();
+objectparachoque3.add(parachoque3);
+// parachoque traseiro /
+var parachoque4 = new THREE.Mesh(geometryParachoque2, materialParachoque);
+parachoque4.position.set(-3, 2.5, 4);
+parachoque4.rotateZ(THREE.MathUtils.degToRad(-70));
+var objectparachoque4 = new THREE.Object3D();
+objectparachoque4.add(parachoque4);
+//parachoque meio _____
+const geometryParachoque5 = new THREE.BoxGeometry( 5.8, 0.3, 8.5 );
+var parachoque5 = new THREE.Mesh(geometryParachoque5, materialParachoque);
+parachoque5.position.set(0.1, 1.5, 4);
+var objectparachoque5 = new THREE.Object3D();
+objectparachoque5.add(parachoque5);
+
+// parachoque dianteiro \
+var parachoque6 = new THREE.Mesh(geometryParachoque2, materialParachoque);
+parachoque6.position.set(3.2, 2.5, 4);
+parachoque6.rotateZ(THREE.MathUtils.degToRad(70));
+var objectparachoque6 = new THREE.Object3D();
+objectparachoque6.add(parachoque6);
+// parachoque dianteiro ___
+var parachoque7 = new THREE.Mesh(geometryParachoque3, materialParachoque);
+parachoque7.position.set(4.75, 3.35, 4);
+var objectparachoque7 = new THREE.Object3D();
+objectparachoque7.add(parachoque7);
+// parachoque dianteiro /
+var parachoque8 = new THREE.Mesh(geometryParachoque2, materialParachoque);
+parachoque8.position.set(6.3, 2.5, 4);
+parachoque8.rotateZ(THREE.MathUtils.degToRad(-70));
+var objectparachoque8 = new THREE.Object3D();
+objectparachoque8.add(parachoque8);
+//parachoque frente
+const geometryParachoque9 = new THREE.BoxGeometry( 1.3, 0.3, 8.5 );
+var parachoque9 = new THREE.Mesh(geometryParachoque9, materialParachoque);
+parachoque9.position.set(7.1, 1.5, 4);
+var objectparachoque9 = new THREE.Object3D();
+objectparachoque9.add(parachoque9);
+//parachoque frente
+const geometryParachoque10 = new THREE.BoxGeometry( 0.2, 0.3, 6 );
+var parachoque10 = new THREE.Mesh(geometryParachoque10, materialParachoque);
+parachoque10.position.set(8.8, 1.5, 4);
+var objectparachoque10 = new THREE.Object3D();
+objectparachoque10.add(parachoque10);
+//parachoque frente
+const geometryParachoque11 = new THREE.BoxGeometry( 0.2, 0.3, 1.7 );
+var parachoque11 = new THREE.Mesh(geometryParachoque11, materialParachoque);
+parachoque11.position.set(8.26, 1.5, 0.45);
+parachoque11.rotateY(THREE.MathUtils.degToRad(45));
+var objectparachoque11 = new THREE.Object3D();
+objectparachoque11.add(parachoque11);
+//parachoque frente
+var parachoque12 = new THREE.Mesh(geometryParachoque11, materialParachoque);
+parachoque12.position.set(8.26, 1.5, 7.55);
+parachoque12.rotateY(THREE.MathUtils.degToRad(-45));
+var objectparachoque12 = new THREE.Object3D();
+objectparachoque12.add(parachoque12);
+//parte preta frente
+const geometryParachoque13 = new THREE.BoxGeometry( 2.5, 2, 8.1 );
+var parachoque13 = new THREE.Mesh(geometryParachoque13, materialParachoque);
+parachoque13.position.set(4.8, 2.5, 4);
+var objectparachoque13 = new THREE.Object3D();
+objectparachoque13.add(parachoque13);
+//parte preta tras
+const geometryParachoque14 = new THREE.BoxGeometry( 2.5, 2, 8.5 );
+var parachoque14 = new THREE.Mesh(geometryParachoque13, materialParachoque);
+parachoque14.position.set(-4.5, 2.5, 4);
+var objectparachoque14 = new THREE.Object3D();
+objectparachoque14.add(parachoque14);
+// parte preta tras \
+const geometryParachoque15 = new THREE.BoxGeometry( 2, 0.3, 8.1 );
+var parachoque15 = new THREE.Mesh(geometryParachoque15, materialParachoque);
+parachoque15.position.set(-5.8, 2.5, 4);
+parachoque15.rotateZ(THREE.MathUtils.degToRad(70));
+var objectparachoque15 = new THREE.Object3D();
+objectparachoque15.add(parachoque15);
+
+// parte preta frente \
+var parachoque16 = new THREE.Mesh(geometryParachoque15, materialParachoque);
+parachoque16.position.set(3.4, 2.5, 4);
+parachoque16.rotateZ(THREE.MathUtils.degToRad(70));
+var objectparachoque16 = new THREE.Object3D();
+objectparachoque16.add(parachoque16);
+
+// parte preta tras /
+var parachoque17 = new THREE.Mesh(geometryParachoque15, materialParachoque);
+parachoque17.position.set(-3.2, 2.5, 4);
+parachoque17.rotateZ(THREE.MathUtils.degToRad(-70));
+var objectparachoque17 = new THREE.Object3D();
+objectparachoque17.add(parachoque17);
+
+// parte preta frente /
+var parachoque18 = new THREE.Mesh(geometryParachoque15, materialParachoque);
+parachoque18.position.set(6.1, 2.5, 4);
+parachoque18.rotateZ(THREE.MathUtils.degToRad(-70));
+var objectparachoque18 = new THREE.Object3D();
+objectparachoque18.add(parachoque18);
+
+
+
+
 
 // gerar objeto convexo a partir dessa estrutura
 function updateConvexObject( )
@@ -383,6 +527,27 @@ function updateConvexObject( )
   carroceria.add(heixo_traseiro);
      
   carroceria.add(objectVidro);
+  carroceria.add(objectFarol);
+  carroceria.add(objectFarol2);
+  carroceria.add(objectparachoque);
+  carroceria.add(objectparachoque2);
+  carroceria.add(objectparachoque3);
+  carroceria.add(objectparachoque4);
+  carroceria.add(objectparachoque5);
+  carroceria.add(objectparachoque6);
+  carroceria.add(objectparachoque7);
+  carroceria.add(objectparachoque8);
+  carroceria.add(objectparachoque9);
+  carroceria.add(objectparachoque10);
+  carroceria.add(objectparachoque11);
+  carroceria.add(objectparachoque12);
+  carroceria.add(objectparachoque13);
+  carroceria.add(objectparachoque14);
+  carroceria.add(objectparachoque15);
+  carroceria.add(objectparachoque16);
+  carroceria.add(objectparachoque17);
+  carroceria.add(objectparachoque18);
+  
   // Uncomment to view debug information of the renderer
   //console.log(renderer.info);
 }
