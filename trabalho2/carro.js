@@ -76,10 +76,10 @@ roda2.rotateX(radianos);
 roda3.rotateX(radianos);
 roda4.rotateX(radianos);
 
-torus.castShadow = true;
-torus1.castShadow = true;
-torus2.castShadow = true;
-torus3.castShadow = true;
+roda1.castShadow = true;
+roda2.castShadow = true;
+roda3.castShadow = true;
+roda4.castShadow = true;
 
 //adiciona as rodas na carroceria
 roda1.add(ARO);
