@@ -48,7 +48,6 @@ let pista = new THREE.Object3D();
 let PistaEscolhida = 0;
 let cameraMode = 0;
 
-
 // contador de voltas
 var VoltasMessage = new SecondaryBox("");
 VoltasMessage.box.style.bottom = "95%";
@@ -304,6 +303,7 @@ let dirLight = new THREE.DirectionalLight(lightColor);
 
 dirLight.position.copy(lightPosition);
 dirLight.castShadow = true;
+light.castShadow = true;
 
 dirLight.position.copy(lightPosition);
 dirLight.castShadow = true;
@@ -311,14 +311,15 @@ dirLight.shadow.mapSize.width = 512;
 dirLight.shadow.mapSize.height = 512;
 dirLight.shadow.camera.near = 1;
 dirLight.shadow.camera.far = 200;
-dirLight.shadow.camera.left = -50;
+dirLight.shadow.camera.left = -10;
 dirLight.shadow.camera.right = 50;
 dirLight.shadow.camera.top = 50;
 dirLight.shadow.camera.bottom = -50;
 scene.add(dirLight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); // cor e intensidade
 scene.add(ambientLight);
-
+carroceria.castShadow = true;
+plane.receiveShadow = true;
 render();
 
 function render() {
