@@ -42,25 +42,27 @@ var objectMaterial = new THREE.MeshPhongMaterial({
 
 // este mateterial já foi definido para as rodas, falta apenas modificar as cores
 var objectMaterial1 = new THREE.MeshLambertMaterial({
-  color: "#898989",
+  color: "#1C1C1C",
   opacity: 1,
   transparent: true});
 
 var objectMaterial2 = new THREE.MeshLambertMaterial({
-  color: "#896050",
+  color: "#1C1C1C",
   opacity: 1,
   transparent: true});
 
 // DETALHE RODA, AINDA N IMPLEMENTADO
-  // const geometry = new THREE.BoxGeometry( 0.8, 0.1, 0.3 );
-  // const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
-  // const cube = new THREE.Mesh( geometry, material );
-  // cube.rotateX(THREE.MathUtils.degToRad(-90));
-  // cube.rotateY(THREE.MathUtils.degToRad(-90));
+  const geometry = new THREE.BoxGeometry( 1.6, 0.1, 0.3 );
+  const material = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
+  const cube = new THREE.Mesh( geometry, material );
+  cube.rotateX(THREE.MathUtils.degToRad(-90));
+  cube.rotateY(THREE.MathUtils.degToRad(-90));
   // cube.rotateZ(THREE.MathUtils.degToRad(-10));
-  // cube.position.set(4.75,2,8.5);
-
-// scene.add(cube);
+  cube.position.set(4.75,1.5,8.5);
+  const cube1 = new THREE.Mesh( geometry, material );
+  cube1.rotateX(THREE.MathUtils.degToRad(-90));
+  cube1.position.set(4.75,1.5,8.5);
+  
 
 const geometriaTorus = new THREE.TorusGeometry(1, 0.6, 13, 30);
 const geometria_preenchimento_roda_dianteira = new THREE.CylinderGeometry(1.1, 1.1, 0.9, 5);
@@ -126,7 +128,8 @@ heixo_dianteiro.add(heixo_dianteiro_central);
 
 
 
-
+heixo_dianteiro.add(cube);
+heixo_dianteiro.add(cube1);
 
 
 
