@@ -29,16 +29,16 @@ import {
   setasPista3,
   setasPista4,
 } from "./Pista.js";
-import { updateCameraPosition, toggleCameraControls,cameraMode } from "./camera.js";
-export { modoInspecao, camera, orbit, cameraOffset, cameraLookAhead };
+import { updateCameraPosition, modoInspecao_Camera } from "./camera.js";
+export { modoInspecao, camera, orbit, cameraOffset, cameraLookAhead, cameraMode,pista };
 import { Object3D } from "../build/three.module.js";
 
-let scene, light; // Initial variables
+let scene, light,orbit; // Initial variables
 let renderer = initRenderer(); // Init a basic renderer
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 let camera = initCamera(new THREE.Vector3(0, 15, 32)); // Init camera in this position
-let orbit = new OrbitControls(camera, renderer.domElement); // Enable mouse rotation, pan, zoom etc.
+orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 let cameraOffset = new THREE.Vector3(-30, 45, 40);
 let cameraLookAhead = 5;
 scene = new THREE.Scene(); // Create main scene
@@ -46,7 +46,7 @@ light = initDefaultBasicLight(scene); // Create a basic light to illuminate the 
 let modoInspecao = true;
 let pista = new THREE.Object3D();
 let PistaEscolhida = 0;
-
+let cameraMode = 0;
 
 
 // contador de voltas
@@ -117,6 +117,8 @@ window.addEventListener(
   },
   false
 );
+
+
 
 var velocidade_carro = 0;
 var acelerou = false;
@@ -233,13 +235,22 @@ function keyboardUpdate(position) {
   }
 
   if (keyboard.down("space")) {
-    console.log("apertou espaço")
-    cameraMode = 1
-
-  } 
+    console.log("Apertou espaço");
+    cameraMode += 1;
+    modoInspecao = modoInspecao_Camera
+    if( cameraMode > 2){
+      cameraMode = 0
+      createPista(posicaoPista1, pista);
+      modoInspecao = false
+      scene.add(pista);
+    }
+    else if ( cameraMode == 2)
+      modoInspecao= true
+  }
+  
   if (keyboard.pressed("1")) {
     modoInspecao = false;
-    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.position.set(-1.5, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
     PistaEscolhida = 1;
     resetMessages();
@@ -251,7 +262,8 @@ function keyboardUpdate(position) {
   }
 
   if (keyboard.pressed("2")) {
-    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.position.set(-1.5, 1.0, 0.0);
+
     carroceria.rotation.set(0, 1.5, 0);
     PistaEscolhida = 2;
     resetMessages();
@@ -262,7 +274,8 @@ function keyboardUpdate(position) {
     scene.add(pista);
   }
   if (keyboard.pressed("3")) {
-    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.position.set(-1.5, 1.0, 0.0);
+
     carroceria.rotation.set(0, 1.5, 0);
     PistaEscolhida = 3;
     resetMessages();
@@ -273,7 +286,7 @@ function keyboardUpdate(position) {
     scene.add(pista);
   }
   if (keyboard.pressed("4")) {
-    carroceria.position.set(0.0, 1.0, 0.0);
+    carroceria.position.set(-1.5, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
     PistaEscolhida = 4;
     resetMessages();
@@ -306,11 +319,12 @@ scene.add(dirLight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); // cor e intensidade
 scene.add(ambientLight);
 
-
 render();
 
 function render() {
   updateVoltasMessage();
+  console.log(modoInspecao)
+
   requestAnimationFrame(render);
   updateCameraPosition();
 //Atualiza a posição da spotlight para coincidir com a da câmera

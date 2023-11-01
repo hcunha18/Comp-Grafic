@@ -11,7 +11,7 @@ import {
   onWindowResize,
   createGroundPlaneXZ,
 } from "../libs/util/util.js";
-import { carroceria,roda1,roda3,ARO,ARO2,ARO3,ARO4} from "./carro.js";
+import { carroceria, roda1, roda3, ARO, ARO2, ARO3, ARO4 } from "./carro.js";
 import { Object3D } from "../build/three.module.js";
 
 let scene, renderer, camera, light, orbit; // Initial variables
@@ -79,10 +79,9 @@ function updtadeFinalMessage() {
   mensagemFinal.changeMessage(str);
 }
 
-function toggleCameraControls() {            
-  orbit.enabled = modoInspecao;            
-}            
-  
+function toggleCameraControls() {
+  orbit.enabled = modoInspecao;
+}
 
 // window size changes
 // Listen window size changes
@@ -91,7 +90,7 @@ window.addEventListener(
   function () {
     onWindowResize(camera, renderer);
   },
-  false,
+  false
 );
 
 // Show axes (parameter is size of each axis)
@@ -196,7 +195,7 @@ let posicaoPista3 = [
   [180, 0, -150],
   [180, 0, -180],
   [210, 0, -180],
-]
+];
 let posicaoPista4 = [
   [0, 0, -30],
   [0, 0, -60],
@@ -235,10 +234,6 @@ let posicaoPista4 = [
   [150, 0, 30],
   [180, 0, 30],
   [210, 0, 30],
-  
-  
-
-  
 ];
 var reduction = false;
 
@@ -258,7 +253,7 @@ function keyboardUpdate(position) {
         velocidade_carro = 0.25;
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       } else {
-        if (velocidade_carro < 0.5) velocidade_carro += 0.410;
+        if (velocidade_carro < 0.5) velocidade_carro += 0.41;
         roda1.rotateZ(0);
         if (velocidade_carro > 0) carroceria.translateX(velocidade_carro);
       }
@@ -343,7 +338,7 @@ function keyboardUpdate(position) {
     carroceria.position.set(0.0, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
     modoInspecao = true;
-    toggleCameraControls();
+    // toggleCameraControls();
     pista.clear();
   }
 
@@ -355,7 +350,7 @@ function keyboardUpdate(position) {
     resetMessages();
     pista.clear();
     // scene.add(carroceria)
-    
+
     createPista(posicaoPista1, pista);
     scene.add(pista);
   }
@@ -375,12 +370,12 @@ function keyboardUpdate(position) {
   if (keyboard.pressed("3")) {
     carroceria.position.set(0.0, 1.0, 0.0);
     carroceria.rotation.set(0, 1.5, 0);
-    
+
     PistaEscolhida = 3;
     resetMessages();
     modoInspecao = false;
     pista.clear();
-    let seta1 = setasPista3(pista)
+    let seta1 = setasPista3(pista);
     createPista(posicaoPista3, pista);
     scene.add(pista);
   }
@@ -392,49 +387,50 @@ function keyboardUpdate(position) {
     resetMessages();
     modoInspecao = false;
     pista.clear();
-    let seta1 = setasPista4(pista)
+    let seta1 = setasPista4(pista);
     createPista(posicaoPista4, pista);
     scene.add(pista);
   }
-  
 }
 
-function setasPista3(pista){
-  const geometry = new THREE.CylinderGeometry( 3, 3, 0.2, 3 ); 
-  const material = new THREE.MeshBasicMaterial( {color: "BLACK"} ); 
-  const triangulo = new THREE.Mesh( geometry, material ); pista.add( triangulo );
-  triangulo.position.set(100,0,-60)
-  triangulo.rotateY(Graus_radianos(90))
-  const triangulo2 = new THREE.Mesh( geometry, material ); pista.add( triangulo2 );
-  triangulo2.position.set(140,0,-60)
-  triangulo2.rotateY(Graus_radianos(90))
-  const triangulo3 = new THREE.Mesh( geometry, material ); pista.add( triangulo3 );
-  triangulo3.position.set(180,0,-100)
-  triangulo3.rotateY(Graus_radianos(180))
-  const triangulo4 = new THREE.Mesh( geometry, material ); pista.add( triangulo4 );
-  triangulo4.position.set(180,0,-140)
-  triangulo4.rotateY(Graus_radianos(180))
+function setasPista3(pista) {
+  const geometry = new THREE.CylinderGeometry(3, 3, 0.2, 3);
+  const material = new THREE.MeshBasicMaterial({ color: "BLACK" });
+  const triangulo = new THREE.Mesh(geometry, material);
+  pista.add(triangulo);
+  triangulo.position.set(100, 0, -60);
+  triangulo.rotateY(Graus_radianos(90));
+  const triangulo2 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo2);
+  triangulo2.position.set(140, 0, -60);
+  triangulo2.rotateY(Graus_radianos(90));
+  const triangulo3 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo3);
+  triangulo3.position.set(180, 0, -100);
+  triangulo3.rotateY(Graus_radianos(180));
+  const triangulo4 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo4);
+  triangulo4.position.set(180, 0, -140);
+  triangulo4.rotateY(Graus_radianos(180));
 }
 
-function setasPista4(pista){
-  const geometry = new THREE.CylinderGeometry( 3, 3, 0.2, 3 ); 
-  const material = new THREE.MeshBasicMaterial( {color: "BLACK"} ); 
-  const triangulo = new THREE.Mesh( geometry, material ); pista.add( triangulo );
-  triangulo.position.set(80,0,-60)
-  triangulo.rotateY(Graus_radianos(90))
-  const triangulo2 = new THREE.Mesh( geometry, material ); pista.add( triangulo2 );
-  triangulo2.position.set(60,0,-40)
-  const triangulo3 = new THREE.Mesh( geometry, material ); pista.add( triangulo3 );
-  triangulo3.position.set(240,0,10)
-  const triangulo4 = new THREE.Mesh( geometry, material ); pista.add( triangulo4 );
-  triangulo4.position.set(240,0,50)
-
+function setasPista4(pista) {
+  const geometry = new THREE.CylinderGeometry(3, 3, 0.2, 3);
+  const material = new THREE.MeshBasicMaterial({ color: "BLACK" });
+  const triangulo = new THREE.Mesh(geometry, material);
+  pista.add(triangulo);
+  triangulo.position.set(80, 0, -60);
+  triangulo.rotateY(Graus_radianos(90));
+  const triangulo2 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo2);
+  triangulo2.position.set(60, 0, -40);
+  const triangulo3 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo3);
+  triangulo3.position.set(240, 0, 10);
+  const triangulo4 = new THREE.Mesh(geometry, material);
+  pista.add(triangulo4);
+  triangulo4.position.set(240, 0, 50);
 }
-
-
-
-
- 
 
 render();
 
@@ -455,32 +451,27 @@ let positionPista = [
   [120, 9999, 60],
 ];
 
-function reducVeloc(vet,position) {
-  let i=0;
- 
-  for(i=0; i<vet.length;i++){
-    if(
-      (position.z <= (vet[i][2] + 15) &&
-      position.z >= (vet[i][2] - 15) &&
-      position.x <= (vet[i][0] + 15) &&
-      position.x >= (vet[i][0] -15)) ||(
-      position.z <= 15 &&
-      position.z >= -15 &&
-      position.x <= 15 &&
-      position.x >= -15)
-    ){
+function reducVeloc(vet, position) {
+  let i = 0;
+
+  for (i = 0; i < vet.length; i++) {
+    if (
+      (position.z <= vet[i][2] + 15 &&
+        position.z >= vet[i][2] - 15 &&
+        position.x <= vet[i][0] + 15 &&
+        position.x >= vet[i][0] - 15) ||
+      (position.z <= 15 &&
+        position.z >= -15 &&
+        position.x <= 15 &&
+        position.x >= -15)
+    ) {
       reduction = false;
-      break
-    }
-    else{
+      break;
+    } else {
       reduction = true;
     }
   }
-  };
- 
-
-  
-
+}
 
 function checkpoint(position) {
   if (
@@ -647,7 +638,7 @@ function createPista(vet, pista) {
     largada1[j].position.set(
       posicaoLargada1[j][0],
       posicaoLargada1[j][1],
-      posicaoLargada1[j][2],
+      posicaoLargada1[j][2]
     );
     pista.add(largada1[j]);
     j++;
@@ -658,7 +649,7 @@ function createPista(vet, pista) {
     largada2[k].position.set(
       posicaoLargada2[k][0],
       posicaoLargada2[k][1],
-      posicaoLargada2[k][2],
+      posicaoLargada2[k][2]
     );
     pista.add(largada2[k]);
     k++;
@@ -667,7 +658,7 @@ function createPista(vet, pista) {
   let i = 0;
   let cube = [];
   let geometry = new THREE.BoxGeometry(30, 0, 30);
-  let material = new THREE.MeshBasicMaterial({ color: 0X2D4870 });
+  let material = new THREE.MeshBasicMaterial({ color: 0x2d4870 });
 
   while (i < vet.length) {
     cube[i] = new THREE.Mesh(geometry, material);
@@ -685,28 +676,28 @@ function render() {
   updateVoltasMessage();
   requestAnimationFrame(render);
   updateCameraPosition();
-  
+  console.log(modoInspecao)
+
 
   if (PistaEscolhida == 2) {
     checkpoint(carroceria.position);
     reducVeloc(posicaoPista2, carroceria.position);
   }
-  if(PistaEscolhida == 1){
+  if (PistaEscolhida == 1) {
     checkpoint(carroceria.position);
     reducVeloc(posicaoPista1, carroceria.position);
   }
-  if(PistaEscolhida == 3){
+  if (PistaEscolhida == 3) {
     checkpoint2(carroceria.position);
     reducVeloc(posicaoPista3, carroceria.position);
   }
-  if(PistaEscolhida == 4){
+  if (PistaEscolhida == 4) {
     checkpoint3(carroceria.position);
     reducVeloc(posicaoPista4, carroceria.position);
   }
-  if (voltas != 4 ) {
+  if (voltas != 4) {
     updatecronometroMessage();
     keyboardUpdate(carroceria.position);
-
   } else if (voltas == 4) {
     updtadeFinalMessage();
     mensagemFinal.box.style.backgroundColor = "rgba(0,0,0)";

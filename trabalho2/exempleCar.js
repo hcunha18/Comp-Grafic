@@ -52,13 +52,13 @@ var objectMaterial2 = new THREE.MeshLambertMaterial({
   transparent: true});
 
 // DETALHE RODA, AINDA N IMPLEMENTADO
-const geometry = new THREE.BoxGeometry( 0.8, 0.1, 0.3 );
-const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
-const cube = new THREE.Mesh( geometry, material );
-cube.rotateX(THREE.MathUtils.degToRad(-90));
-cube.rotateY(THREE.MathUtils.degToRad(-90));
-cube.rotateZ(THREE.MathUtils.degToRad(-10));
-cube.position.set(4.75,2,8.5);
+  // const geometry = new THREE.BoxGeometry( 0.8, 0.1, 0.3 );
+  // const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+  // const cube = new THREE.Mesh( geometry, material );
+  // cube.rotateX(THREE.MathUtils.degToRad(-90));
+  // cube.rotateY(THREE.MathUtils.degToRad(-90));
+  // cube.rotateZ(THREE.MathUtils.degToRad(-10));
+  // cube.position.set(4.75,2,8.5);
 
 // scene.add(cube);
 
@@ -320,7 +320,7 @@ function createConvex_topo_frente(){
 }
 createConvex_topo_frente();
 generatePoints_topo_frente();
-torus.add(cube);
+// torus.add(cube);
 
 
 // gerar objeto convexo a partir dessa estrutura
