@@ -13,6 +13,7 @@ var radianos = Graus_radianos(90);
 
 //carroceria do carro
 let carroceriaGeometry = new THREE.BoxGeometry(6, 1.5, 3);
+carroceria.castShadow = true;
 material = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // create a basic material
 let carroceria = new THREE.Mesh(carroceriaGeometry, material);
 carroceria.position.set(0.0, 1.0, 0.0); // posicao da carroceria
@@ -74,6 +75,11 @@ roda1.rotateX(radianos);
 roda2.rotateX(radianos);
 roda3.rotateX(radianos);
 roda4.rotateX(radianos);
+
+torus.castShadow = true;
+torus1.castShadow = true;
+torus2.castShadow = true;
+torus3.castShadow = true;
 
 //adiciona as rodas na carroceria
 roda1.add(ARO);

@@ -9,7 +9,7 @@ import {initRenderer,
         lightFollowingCamera} from "../libs/util/util.js";
 import { Object3D, Scene, Vector3 } from '../build/three.module.js';
 
-export{carroceria,torus,torus1,torus2,torus3,heixo_dianteiro}
+export{carroceria,torus,torus1,torus2,torus3,heixo_dianteiro,heixo_traseiro,Aro,Aro1,Aro2,Aro3,Aro4,Aro5,Aro6,Aro7}
 
 // var light = initDefaultSpotlight(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 
@@ -54,41 +54,41 @@ var objectMaterial2 = new THREE.MeshLambertMaterial({
 // DETALHE RODA, AINDA N IMPLEMENTADO
   const geometry = new THREE.BoxGeometry( 1.6, 0.1, 0.3 );
   const material = new THREE.MeshLambertMaterial( {color: "#808080"} );
-  const cube = new THREE.Mesh( geometry, material );
-  cube.rotateX(THREE.MathUtils.degToRad(-90));
-  cube.rotateY(THREE.MathUtils.degToRad(-90));
-  // cube.rotateZ(THREE.MathUtils.degToRad(-10));
-  cube.position.set(4.75,1.5,8.5);
-  const cube1 = new THREE.Mesh( geometry, material );
-  cube1.rotateX(THREE.MathUtils.degToRad(-90));
-  cube1.position.set(4.75,1.5,8.5);
+  const Aro = new THREE.Mesh( geometry, material );
+  Aro.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro.rotateY(THREE.MathUtils.degToRad(-90));
+  // Aro.rotateZ(THREE.MathUtils.degToRad(-10));
+  Aro.position.set(4.75,1.5,8.5);
+  const Aro1 = new THREE.Mesh( geometry, material );
+  Aro1.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro1.position.set(4.75,1.5,8.5);
 
-  const cube2 = new THREE.Mesh( geometry, material );
-  cube2.rotateX(THREE.MathUtils.degToRad(-90));
-  cube2.position.set(4.75,1.5,-0.5);
+  const Aro2 = new THREE.Mesh( geometry, material );
+  Aro2.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro2.position.set(4.75,1.5,-0.5);
 
-  const cube3 = new THREE.Mesh( geometry, material );
-  cube3.rotateX(THREE.MathUtils.degToRad(-90));
-  cube3.rotateY(THREE.MathUtils.degToRad(-90));
-  cube3.position.set(4.75,1.5,-0.5);
+  const Aro3 = new THREE.Mesh( geometry, material );
+  Aro3.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro3.rotateY(THREE.MathUtils.degToRad(-90));
+  Aro3.position.set(4.75,1.5,-0.5);
 
-  const cube4 = new THREE.Mesh( geometry, material );
-  cube4.rotateX(THREE.MathUtils.degToRad(-90));
-  cube4.position.set(-4.5,1.5,-0.5);
+  const Aro4 = new THREE.Mesh( geometry, material );
+  Aro4.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro4.position.set(-4.5,1.5,-0.5);
 
-  const cube5 = new THREE.Mesh( geometry, material );
-  cube5.rotateX(THREE.MathUtils.degToRad(-90));
-  cube5.rotateY(THREE.MathUtils.degToRad(-90));
-  cube5.position.set(-4.5,1.5,-0.5);
+  const Aro5 = new THREE.Mesh( geometry, material );
+  Aro5.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro5.rotateY(THREE.MathUtils.degToRad(-90));
+  Aro5.position.set(-4.5,1.5,-0.5);
 
-  const cube6 = new THREE.Mesh( geometry, material );
-  cube6.rotateX(THREE.MathUtils.degToRad(-90));
-  cube6.position.set(-4.5,1.5, 8.5);
+  const Aro6 = new THREE.Mesh( geometry, material );
+  Aro6.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro6.position.set(-4.5,1.5, 8.5);
 
-  const cube7 = new THREE.Mesh( geometry, material );
-  cube7.rotateX(THREE.MathUtils.degToRad(-90));
-  cube7.rotateY(THREE.MathUtils.degToRad(-90));
-  cube7.position.set(-4.5,1.5,8.5);
+  const Aro7 = new THREE.Mesh( geometry, material );
+  Aro7.rotateX(THREE.MathUtils.degToRad(-90));
+  Aro7.rotateY(THREE.MathUtils.degToRad(-90));
+  Aro7.position.set(-4.5,1.5,8.5);
   
 
 const geometriaTorus = new THREE.TorusGeometry(1, 0.6, 13, 30);
@@ -155,15 +155,20 @@ heixo_dianteiro.add(heixo_dianteiro_central);
 
 
 
-heixo_dianteiro.add(cube);
-heixo_dianteiro.add(cube1);
-heixo_dianteiro.add(cube2);
-heixo_dianteiro.add(cube3);
+heixo_dianteiro.add(Aro);
+heixo_dianteiro.add(Aro1);
+heixo_dianteiro.add(Aro2);
+heixo_dianteiro.add(Aro3);
 
-heixo_traseiro.add(cube4);
-heixo_traseiro.add(cube5);
-heixo_traseiro.add(cube6);
-heixo_traseiro.add(cube7);
+heixo_traseiro.add(Aro4);
+heixo_traseiro.add(Aro5);
+heixo_traseiro.add(Aro6);
+heixo_traseiro.add(Aro7);
+
+torus.castShadow = true;
+torus1.castShadow = true;
+torus2.castShadow = true;
+torus3.castShadow = true;
 
 
 
@@ -184,14 +189,12 @@ var objectSize = 10;
 var convexGeometry = null;
 var convexGeometry1 = null;
 var carroceria = null;
+
 var pointCloudVisibility = true;
 var objectVisibility = true;
 var castShadow = true;
 
-
-
 // Create convex object the first time
-
 
 // gerar pontos de um objeto convexo
 function generatePoints(numberOfPoints)
@@ -277,16 +280,6 @@ function generatePoints(numberOfPoints)
   return points;
 }
 
-
-
-
-
-
-
-
-
-
-
 // função para gerar a parte da frente do topo
 function generatePoints_topo_frente(numberOfPoints)
 {
@@ -357,7 +350,7 @@ function createConvex_topo_frente(){
 }
 createConvex_topo_frente();
 generatePoints_topo_frente();
-// torus.add(cube);
+// torus.add(Aro);
 
 // vidro
 const geometryVidro = new THREE.BoxGeometry( 3.5, 5, 0.2 );
