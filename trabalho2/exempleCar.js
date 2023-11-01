@@ -71,6 +71,24 @@ var objectMaterial2 = new THREE.MeshLambertMaterial({
   cube3.rotateX(THREE.MathUtils.degToRad(-90));
   cube3.rotateY(THREE.MathUtils.degToRad(-90));
   cube3.position.set(4.75,1.5,-0.5);
+
+  const cube4 = new THREE.Mesh( geometry, material );
+  cube4.rotateX(THREE.MathUtils.degToRad(-90));
+  cube4.position.set(-4.5,1.5,-0.5);
+
+  const cube5 = new THREE.Mesh( geometry, material );
+  cube5.rotateX(THREE.MathUtils.degToRad(-90));
+  cube5.rotateY(THREE.MathUtils.degToRad(-90));
+  cube5.position.set(-4.5,1.5,-0.5);
+
+  const cube6 = new THREE.Mesh( geometry, material );
+  cube6.rotateX(THREE.MathUtils.degToRad(-90));
+  cube6.position.set(-4.5,1.5, 8.5);
+
+  const cube7 = new THREE.Mesh( geometry, material );
+  cube7.rotateX(THREE.MathUtils.degToRad(-90));
+  cube7.rotateY(THREE.MathUtils.degToRad(-90));
+  cube7.position.set(-4.5,1.5,8.5);
   
 
 const geometriaTorus = new THREE.TorusGeometry(1, 0.6, 13, 30);
@@ -141,6 +159,11 @@ heixo_dianteiro.add(cube);
 heixo_dianteiro.add(cube1);
 heixo_dianteiro.add(cube2);
 heixo_dianteiro.add(cube3);
+
+heixo_traseiro.add(cube4);
+heixo_traseiro.add(cube5);
+heixo_traseiro.add(cube6);
+heixo_traseiro.add(cube7);
 
 
 
