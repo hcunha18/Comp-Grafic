@@ -21,7 +21,7 @@ function updateCameraPosition() {
   switch (cameraMode) {
     case 0:
       // Modo 3ª pessoa
-      let offset = new THREE.Vector3(-20, 5, 2);
+      let offset = new THREE.Vector3(-30, 10, 2);
       let matrix = new THREE.Matrix4();
       modoInspecao_Camera= false
 

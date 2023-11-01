@@ -33,7 +33,7 @@ import {
   posicaoPista4,
   setasPista3,
   setasPista4,
-} from "./Pista.js";
+} from "./pista.js";
 import { updateCameraPosition, modoInspecao_Camera } from "./camera.js";
 export {
   modoInspecao,
@@ -58,6 +58,7 @@ scene = new THREE.Scene(); // Create main scene
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 let modoInspecao = false;
 let pista = new THREE.Object3D();
+pista.receiveShadow = true;
 let PistaEscolhida = 1;
 carroceria.position.set(-1.5, 1.0, 0.0);
 carroceria.rotation.set(0, 1.5, 0);

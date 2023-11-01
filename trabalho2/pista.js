@@ -242,11 +242,12 @@ function createPista(vet, pista) {
   let i = 0;
   let cube = [];
   let geometry = new THREE.BoxGeometry(30, 0, 30);
-  let material = new THREE.MeshBasicMaterial({ color: 0X2D4870 });
+  let material = new THREE.MeshBasicMaterial({ color: 0Xffffff });
 
   while (i < vet.length) {
     cube[i] = new THREE.Mesh(geometry, material);
     cube[i].position.set(vet[i][0], vet[i][1], vet[i][2]);
+    cube[i].receiveShadow = true;
     pista.add(cube[i]);
     i++;
   }
