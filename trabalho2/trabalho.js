@@ -17,7 +17,14 @@ import {
   carroceria,
   torus,
   torus1,
-  Aro, Aro1, Aro2, Aro3, Aro4, Aro5, Aro6, Aro7
+  Aro,
+  Aro1,
+  Aro2,
+  Aro3,
+  Aro4,
+  Aro5,
+  Aro6,
+  Aro7,
 } from "./exempleCar.js";
 import {
   createPista,
@@ -74,33 +81,62 @@ let z = 5;
 // // Adicione a segunda câmera à cena
 // scene.add(virtualCamera);
 
+// Estilos comuns
+const textStyle = "32px Ubuntu";
+const backgroundColor = "rgba(0, 0, 0, 0.5)"; // Fundo semi-transparente
+const textColor = "white";
+const textShadow = "2px 2px 4px #000000";
+
 // contador de voltas
-var VoltasMessage = new SecondaryBox("");
-VoltasMessage.box.style.bottom = "0%";
-VoltasMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu");
+//var VoltasMessage = new SecondaryBox("");
+//VoltasMessage.changeStyle(backgroundColor, textColor, textStyle, "ubuntu");
+//VoltasMessage.box.style.textShadow = textShadow;
 
 // Velocimentro
 var velocimetro = new SecondaryBox("");
 velocimetro.box.style.bottom = "95%";
 velocimetro.box.style.left = "50%";
-velocimetro.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu");
+velocimetro.changeStyle("rgba(0,0,0,0)", "white", "24px", "ubuntu");
 
 function updateVoltasMessage() {
-
   var str = "Voltas: " + voltas;
-  VoltasMessage.changeMessage(str);
+  //VoltasMessage.changeMessage(str);
+}
+
+function generateVelocimetroGraphic(velocidade) {
+  let maxChars = 10; // número máximo de caracteres (barras) para representar a velocidade
+  let charCount = Math.ceil((velocidade / 100) * maxChars); // calcular o número de barras com base na velocidade
+
+  let greenZone = 3; // as primeiras 3 barras são verdes
+  let yellowZone = 7; // as próximas 4 barras são amarelas
+  // e as últimas 3 barras são vermelhas
+
+  let graphic = "";
+  for (let i = 0; i < charCount; i++) {
+    if (i < greenZone) {
+      graphic += "🟩"; // representando verde
+    } else if (i < yellowZone) {
+      graphic += "🟨"; // representando amarelo
+    } else {
+      graphic += "🟥"; // representando vermelho
+    }
+  }
+
+  return graphic;
 }
 
 function updateVelocimetro() {
   if (velocidade_carro > 0) {
-    var str = Math.ceil((velocidade_carro * 99)) + "Km/h ";
+    let velocidadeVisual = generateVelocimetroGraphic(velocidade_carro * 99);
+    var str =
+      velocidadeVisual + " " + Math.ceil(velocidade_carro * 99) + "Km/h";
     velocimetro.changeMessage(str);
-  }
-  if (Math.ceil((velocidade_carro * 99) < 3)) {
+  } else {
     var str = "0Km/h ";
     velocimetro.changeMessage(str);
   }
 }
+
 //funcao para tranformar graus em radianos
 function Graus_radianos(anguloGraus) {
   var radianos = anguloGraus * (Math.PI / 180);
@@ -110,12 +146,22 @@ function Graus_radianos(anguloGraus) {
 //cronometro
 var cronometroMessage = new SecondaryBox("");
 var mensagemFinal = new SecondaryBox("");
+var VoltasContainer = document.createElement("div");
+VoltasContainer.style.position = "absolute";
+VoltasContainer.style.bottom = "15%"; // Ajuste conforme necessário
+VoltasContainer.style.fontSize = "32px";
+VoltasContainer.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+VoltasContainer.style.color = "white";
+VoltasContainer.style.fontFamily = "ubuntu";
+VoltasContainer.style.fontSize = "32px";
+document.body.appendChild(VoltasContainer);
+
 mensagemFinal.changeStyle("rgba(0,0,0,0)", "white", "50px", "ubuntu");
 mensagemFinal.box.style.bottom = "50%";
-mensagemFinal.box.style.left = "30%";
+mensagemFinal.box.style.left = "5%";
 
-cronometroMessage.changeStyle("rgba(0,0,0,0)", "white", "32px", "ubuntu");
-cronometroMessage.box.style.bottom = "5%";
+cronometroMessage.changeStyle(backgroundColor, textColor, textStyle, "ubuntu");
+cronometroMessage.box.style.bottom = "6%";
 
 let Segundos = 0;
 let miliSegundos = 0;
@@ -128,25 +174,50 @@ function resetMessages(voltas) {
   voltas = 0;
 }
 
+var cronometroInterval;
+var temposDeVolta = []; // Array para armazenar o tempo de cada volta
+
 function updatecronometroMessage() {
-  var str = Minutos + ":" + Segundos + ":" + miliSegundos;
-  let intervalo = setInterval(miliSegundos++, 1000);
-  if (miliSegundos == 60) {
+  miliSegundos++;
+  if (miliSegundos === 60) {
     Segundos++;
     miliSegundos = 0;
   }
-  if (Segundos == 60) {
+  if (Segundos === 60) {
     Minutos++;
     Segundos = 0;
   }
-  if (voltas == 4) {
-    updtadeFinalMessage();
-  }
+
+  var str = ` Tempo: ${Minutos.toString().padStart(
+    2,
+    "0"
+  )}:${Segundos.toString().padStart(2, "0")}:${miliSegundos
+    .toString()
+    .padStart(2, "0")}`;
   cronometroMessage.changeMessage(str);
+
+  var VoltasMessage = new SecondaryBox("");
+  VoltasMessage.changeStyle("rgba(0,0,0,0.5)", "white", "32px", "ubuntu");
+  VoltasMessage.box.style.height = "auto"; // Ou defina uma altura específica suficiente
+  VoltasMessage.box.style.bottom = "100%"; // Ajuste conforme necessário
+
+  // Checa se uma nova volta foi completada
+  if (voltas === temposDeVolta.length + 1) {
+    temposDeVolta.push(str);
+    var voltaMessage = document.createElement("div");
+    voltaMessage.innerHTML = "Volta " + voltas + ": " + str;
+    voltaMessage.style.marginBottom = "5px"; // Adiciona algum espaçamento entre as mensagens
+    VoltasContainer.appendChild(voltaMessage);
+  }
+
+  if (voltas === 4) {
+    updtadeFinalMessage();
+    clearInterval(cronometroInterval); // Para o cronômetro
+  }
 }
 
 function updtadeFinalMessage() {
-  var str = "Voce finalizou a corrida";
+  var str = "Você finalizou a corrida";
   mensagemFinal.changeMessage(str);
 }
 
@@ -184,9 +255,6 @@ virtualCamera.position.copy(camPosition);
 virtualCamera.rotation.set(-1.5708, 0, 0);
 virtualCamera.up.copy(upVec);
 
-
-
-
 function keyboardUpdate(position) {
   keyboard.update();
   //angulo de rotacai do carro
@@ -195,17 +263,15 @@ function keyboardUpdate(position) {
 
   if (!modoInspecao) {
     if (keyboard.pressed("X")) {
-
       // roda girar quando anda
-      Aro.rotation.y += velocidade_carro / 3
-      Aro1.rotation.y += velocidade_carro / 3
-      Aro2.rotation.y += velocidade_carro / 3
-      Aro3.rotation.y += velocidade_carro / 3
-      Aro4.rotation.y += velocidade_carro / 3
-      Aro5.rotation.y += velocidade_carro / 3
-      Aro6.rotation.y += velocidade_carro / 3
-      Aro7.rotation.y += velocidade_carro / 3
-
+      Aro.rotation.y += velocidade_carro / 3;
+      Aro1.rotation.y += velocidade_carro / 3;
+      Aro2.rotation.y += velocidade_carro / 3;
+      Aro3.rotation.y += velocidade_carro / 3;
+      Aro4.rotation.y += velocidade_carro / 3;
+      Aro5.rotation.y += velocidade_carro / 3;
+      Aro6.rotation.y += velocidade_carro / 3;
+      Aro7.rotation.y += velocidade_carro / 3;
 
       if (reduction == true) {
         velocidade_carro = 0.25;
@@ -288,23 +354,21 @@ function keyboardUpdate(position) {
         torus1.rotateY(anguloRoda);
       }
     }
-
   } else {
     if (keyboard.pressed("X")) {
-      velocidade_carro += 0.010;
-      Aro.rotation.y += velocidade_carro / 3
-      Aro1.rotation.y += velocidade_carro / 3
-      Aro2.rotation.y += velocidade_carro / 3
-      Aro3.rotation.y += velocidade_carro / 3
-      Aro4.rotation.y += velocidade_carro / 3
-      Aro5.rotation.y += velocidade_carro / 3
-      Aro6.rotation.y += velocidade_carro / 3
-      Aro7.rotation.y += velocidade_carro / 3
+      velocidade_carro += 0.01;
+      Aro.rotation.y += velocidade_carro / 3;
+      Aro1.rotation.y += velocidade_carro / 3;
+      Aro2.rotation.y += velocidade_carro / 3;
+      Aro3.rotation.y += velocidade_carro / 3;
+      Aro4.rotation.y += velocidade_carro / 3;
+      Aro5.rotation.y += velocidade_carro / 3;
+      Aro6.rotation.y += velocidade_carro / 3;
+      Aro7.rotation.y += velocidade_carro / 3;
     } else {
       velocidade_carro = 0;
     }
   }
-
 
   if (keyboard.down("space")) {
     console.log("Apertou espaço");
@@ -366,9 +430,7 @@ function keyboardUpdate(position) {
       createPista(posicaoPista4, pista);
       scene.add(pista);
     }
-
   }
-
 }
 
 let lightColor = "rgb(255,255,255)";
@@ -431,8 +493,6 @@ function controlledRender() {
 render();
 
 function render() {
-
-
   requestAnimationFrame(render);
   updateCameraPosition();
   //Atualiza a posição da spotlight para coincidir com a da câmera
