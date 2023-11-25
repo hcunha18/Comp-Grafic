@@ -1,13 +1,7 @@
 import * as THREE from "three";
-import Stats from "../build/jsm/libs/stats.module.js";
-import { TrackballControls } from "../build/jsm/controls/TrackballControls.js";
 import { ConvexGeometry } from "../build/jsm/geometries/ConvexGeometry.js";
 import {
-  initRenderer,
-  initDefaultSpotlight,
   createGroundPlane,
-  onWindowResize,
-  lightFollowingCamera,
 } from "../libs/util/util.js";
 import { Object3D, Scene, Vector3 } from "../build/three.module.js";
 
@@ -30,6 +24,14 @@ export {
 
 // var light = initDefaultSpotlight(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 
+let colormap = 	new THREE.TextureLoader().load("../assets/textures/displacement/Stylized_blocks_001_basecolor.jpg");
+let normalmap = new THREE.TextureLoader().load("../assets/textures/displacement/Stylized_blocks_001_normal.jpg");
+let dispmap = 	new THREE.TextureLoader().load("../assets/textures/displacement/Stylized_blocks_001_height.png");
+
+let colormap1 = 	new THREE.TextureLoader().load("../assets/textures/teto.jpg");
+let colormap3 = 	new THREE.TextureLoader().load("../assets/textures/darkcement.jpg");
+let texturaVidro = 	new THREE.TextureLoader().load("../assets/textures/glass1.png");
+
 var camera = new THREE.PerspectiveCamera(
   45,
   window.innerWidth / window.innerHeight,
@@ -48,13 +50,13 @@ var axesHelper = new THREE.AxesHelper(20);
 axesHelper.visible = false;
 axesHelper.translateY(0.1);
 
-var objColor = "rgb(255, 0, 0)";
-var objOpacity = 0.5;
-
 // Object Material
 var objectMaterial = new THREE.MeshPhongMaterial({
-  color: "#898989",
+  // color: "#898989",
   transparent: true,
+  map: colormap3,
+  normalMap: colormap3,
+	displacementScale: 100,
 });
 
 // INICIO
@@ -64,13 +66,21 @@ var objectMaterial1 = new THREE.MeshLambertMaterial({
   color: "#1C1C1C",
   opacity: 1,
   transparent: true,
+  map: colormap,
+	normalMap: normalmap,
+	displacementMap: dispmap,
+	displacementScale: 0.1,
 });
 
-var objectMaterial2 = new THREE.MeshLambertMaterial({
-  color: "#1C1C1C",
-  opacity: 1,
-  transparent: true,
-});
+// var objectMaterial1 = new THREE.MeshLambertMaterial({
+//   color: "#1C1C1C",
+//   opacity: 1,
+//   transparent: true,
+//   map: colormap,
+// 	normalMap: normalmap,
+// 	displacementMap: dispmap,
+// 	displacementScale: 0.1    ,
+// });
 
 // DETALHE RODA, AINDA N IMPLEMENTADO
 const geometry = new THREE.BoxGeometry(1.6, 0.1, 0.3);
@@ -127,7 +137,7 @@ const geometria_preenchimento_roda_dianteira1 = new THREE.CylinderGeometry(
 const heixo_dianteiro = new Object3D();
 const heixo_traseiro = new Object3D();
 
-const torus = new THREE.Mesh(geometriaTorus, objectMaterial2);
+const torus = new THREE.Mesh(geometriaTorus, objectMaterial1);
 const torus1 = new THREE.Mesh(geometriaTorus, objectMaterial1);
 const torus2 = new THREE.Mesh(geometriaTorus, objectMaterial1);
 const torus3 = new THREE.Mesh(geometriaTorus, objectMaterial1);
@@ -215,20 +225,14 @@ heixo_traseiro.add(Aro7);
 //----------------------------------
 var numPoints = 30;
 
-var sphereGeom = new THREE.SphereGeometry(0.2); // Sphere to represent points
-var sphereMaterial = new THREE.MeshPhongMaterial({ color: "rgb(255,255,0)" });
+
 
 // Global variables to be removed from memory each interaction
 var pointCloud = null;
 //  var spGroup = null;
-var points = null;
-var objectSize = 10;
 var convexGeometry = null;
 var convexGeometry1 = null;
 var carroceria = null;
-var pointCloudVisibility = true;
-var objectVisibility = true;
-var castShadow = true;
 
 // Create convex object the first time
 
@@ -313,7 +317,6 @@ function generatePoints(numberOfPoints) {
 
   return points;
 }
-
 // função para gerar a parte da frente do topo
 function generatePoints_topo_frente(numberOfPoints) {
   var points = [];
@@ -350,7 +353,7 @@ function generatePoints_topo_frente(numberOfPoints) {
   Z = 8;
   points.push(new THREE.Vector3(X, Y, Z));
 
-  var material = new THREE.MeshPhongMaterial({ color: "rgb(255,255,0)" });
+  var material = new THREE.MeshPhongMaterial({ color: "rgb(255,255,0)"});
 
   pointCloud = new THREE.Object3D();
   points.forEach(function (point) {
@@ -381,11 +384,12 @@ function createConvex_topo_frente() {
 }
 createConvex_topo_frente();
 generatePoints_topo_frente();
-// torus.add(cube);
 
 // vidro
 const geometryVidro = new THREE.BoxGeometry(5, 5, 0.2);
-const materialVidro = new THREE.MeshPhongMaterial({ color: "#03000f" });
+const materialVidro = new THREE.MeshPhongMaterial({ color: "#3c3c3c", 
+map: texturaVidro,
+displacementScale: 1 });
 var vidro = new THREE.Mesh(geometryVidro, materialVidro);
 vidro.position.set(4.5, 4.7, 4);
 vidro.rotateX(THREE.MathUtils.degToRad(-90));
@@ -395,7 +399,9 @@ objectVidro.add(vidro);
 
 // farol dianteiro
 const geometryFarol = new THREE.BoxGeometry(0.5, 0.2, 6);
-const materialFarol = new THREE.MeshPhongMaterial({ color: "#F0F8FF" });
+let colormap2 = 	new THREE.TextureLoader().load("../assets/textures/intertravado.jpg");
+const materialFarol = new THREE.MeshPhongMaterial({color: "#F0F8FF",  map: colormap2,
+displacementScale: 0.1, });
 var farol = new THREE.Mesh(geometryFarol, materialFarol);
 farol.position.set(8.8, 3.5, 4);
 var objectFarol = new THREE.Object3D();
@@ -403,7 +409,8 @@ objectFarol.add(farol);
 
 // farol traseiro
 const geometryFarol2 = new THREE.BoxGeometry(0.5, 0.2, 7.9);
-const materialFarol2 = new THREE.MeshPhongMaterial({ color: "#f0d046" });
+const materialFarol2 = new THREE.MeshPhongMaterial({ color: "#f0d046",  map: colormap2,
+displacementScale: 10, });
 var farol2 = new THREE.Mesh(geometryFarol2, materialFarol2);
 farol2.position.set(-7.8, 3.5, 4);
 var objectFarol2 = new THREE.Object3D();
@@ -411,7 +418,8 @@ objectFarol2.add(farol2);
 
 //parachoque baixo traseiro
 const geometryParachoque = new THREE.BoxGeometry(1.8, 0.3, 8.5);
-const materialParachoque = new THREE.MeshPhongMaterial({ color: "#03000f" });
+const materialParachoque = new THREE.MeshPhongMaterial({ color: "#03000f" , map: colormap1,
+displacementScale: 1,});
 var parachoque = new THREE.Mesh(geometryParachoque, materialParachoque);
 parachoque.position.set(-7, 1.5, 4);
 var objectparachoque = new THREE.Object3D();
@@ -543,7 +551,6 @@ function updateConvexObject() {
   // Object = Carroceria
   carroceria.add(heixo_dianteiro);
   carroceria.add(heixo_traseiro);
-
   carroceria.add(objectVidro);
   carroceria.add(objectFarol);
   carroceria.add(objectFarol2);
@@ -566,8 +573,6 @@ function updateConvexObject() {
   carroceria.add(objectparachoque17);
   carroceria.add(objectparachoque18);
 
-  // Uncomment to view debug information of the renderer
-  //console.log(renderer.info);
 }
 
 updateConvexObject();
