@@ -92,6 +92,41 @@ const textShadow = "2px 2px 4px #000000";
 //VoltasMessage.changeStyle(backgroundColor, textColor, textStyle, "ubuntu");
 //VoltasMessage.box.style.textShadow = textShadow;
 
+
+// Configuração da Repetição
+const loader = new THREE.TextureLoader();
+const pistaTexture1 = loader.load("pedra.jpg");
+const pistaTexture2 = loader.load("pista2.jpg");
+const pistaTexture3 = loader.load("pista3.jpg");
+const pistaTexture4 = loader.load("pista4.jpg");
+const foraPistaTexture1 = loader.load("grama.jpg");
+const foraPistaTexture2 = loader.load("forapista2.jpg");
+const foraPistaTexture3 = loader.load("forapista3.jpg");
+const foraPistaTexture4 = loader.load("forapista4.jpg");
+
+pistaTexture1.wrapS = pistaTexture1.wrapT = THREE.RepeatWrapping;
+foraPistaTexture1.wrapS = foraPistaTexture1.wrapT = THREE.RepeatWrapping;
+pistaTexture1.repeat.set(1, 1);
+foraPistaTexture1.repeat.set(15, 15);
+
+pistaTexture2.wrapS = pistaTexture2.wrapT = THREE.RepeatWrapping;
+foraPistaTexture2.wrapS = foraPistaTexture2.wrapT = THREE.RepeatWrapping;
+pistaTexture2.repeat.set(1, 1);
+foraPistaTexture2.repeat.set(15, 15);
+
+pistaTexture3.wrapS = pistaTexture3.wrapT = THREE.RepeatWrapping;
+foraPistaTexture3.wrapS = foraPistaTexture3.wrapT = THREE.RepeatWrapping;
+pistaTexture3.repeat.set(1, 1);
+foraPistaTexture3.repeat.set(15, 15);
+
+pistaTexture4.wrapS = pistaTexture4.wrapT = THREE.RepeatWrapping;
+foraPistaTexture4.wrapS = foraPistaTexture4.wrapT = THREE.RepeatWrapping;
+pistaTexture4.repeat.set(1, 1);
+foraPistaTexture4.repeat.set(15, 15);
+
+
+
+
 // Velocimentro
 var velocimetro = new SecondaryBox("");
 velocimetro.box.style.bottom = "95%";
@@ -414,11 +449,12 @@ function keyboardUpdate(position) {
       carroceria.position.set(-1.5, 1.0, 0.0);
       carroceria.rotation.set(0, 1.5, 0);
       PistaEscolhida = 1;
+      
       resetMessages();
       pista.clear();
       // scene.add(carroceria)
 
-      createPista(posicaoPista1, pista);
+      createPista(posicaoPista1, pista,pistaTexture1,foraPistaTexture1);
       scene.add(pista);
     }
 
@@ -430,7 +466,7 @@ function keyboardUpdate(position) {
       modoInspecao = false;
       pista.clear();
 
-      createPista(posicaoPista2, pista);
+      createPista(posicaoPista2, pista,pistaTexture2,foraPistaTexture2);
       scene.add(pista);
     }
     if (keyboard.pressed("3")) {
@@ -441,7 +477,7 @@ function keyboardUpdate(position) {
       modoInspecao = false;
       pista.clear();
       let seta1 = setasPista3(pista);
-      createPista(posicaoPista3, pista);
+      createPista(posicaoPista3, pista,pistaTexture3,foraPistaTexture3);
       scene.add(pista);
     }
     if (keyboard.pressed("4")) {
@@ -453,7 +489,7 @@ function keyboardUpdate(position) {
       modoInspecao = false;
       pista.clear();
       let seta1 = setasPista4(pista);
-      createPista(posicaoPista4, pista);
+      createPista(posicaoPista4, pista,pistaTexture4,foraPistaTexture4);
       scene.add(pista);
     }
   }

@@ -1,4 +1,5 @@
 import * as THREE from "../build/three.module.js";
+import { degreesToRadians } from "../libs/util/util.js";
 export {
   createPista,
   checkpoint,
@@ -12,9 +13,40 @@ export {
   posicaoPista3,
   posicaoPista4,
   setasPista3,
-  setasPista4
+  setasPista4,
 };
 
+const loader = new THREE.TextureLoader();
+const feno1 = new THREE.CylinderGeometry(5,5,20,32);
+
+let cilindroMaterial = [
+  ("fenolateral.jpg",1,1),
+  ("fenobase.jpg",1,1),
+  ("fenolbase.jpg",1,1),
+];
+
+let feno = new THREE.Mesh(feno1,cilindroMaterial);
+feno.rotateX(degreesToRadians(90));
+
+const basegeometria = new THREE.CylinderGeometry(4.2, 4.2, 0.2, 4);
+const materialbase = new THREE.MeshBasicMaterial({ color: "BLACK" });
+const base = new THREE.Mesh(basegeometria, materialbase);
+
+var textureLoader = new THREE.TextureLoader();
+const conegeometria = new THREE.CylinderGeometry(4.2, 4.2, 0.2, 4);
+const materialcone = new THREE.MeshBasicMaterial({ color: 0xFFa700 });
+const cone = new THREE.Mesh(conegeometria, materialcone);
+var sun = textureLoader.load("cone.jpg");
+
+
+// const pistaTexture = loader.load("pedra.jpg");
+// const foraPistaTexture = loader.load("grama.jpg");
+
+// Configuração da Repetição
+// pistaTexture.wrapS = pistaTexture.wrapT = THREE.RepeatWrapping;
+// foraPistaTexture.wrapS = foraPistaTexture.wrapT = THREE.RepeatWrapping;
+// pistaTexture.repeat.set(1, 1);
+// foraPistaTexture.repeat.set(15, 15);
 
 function Graus_radianos(anguloGraus) {
   var radianos = anguloGraus * (Math.PI / 180);
@@ -60,28 +92,26 @@ function setasPista4(pista) {
   triangulo4.position.set(240, 0, 50);
 }
 
-function reducVeloc(vet,position) {
-  let i=0;
- 
-  for(i=0; i<vet.length;i++){
-    if(
-      (position.z <= (vet[i][2] + 15) &&
-      position.z >= (vet[i][2] - 15) &&
-      position.x <= (vet[i][0] + 15) &&
-      position.x >= (vet[i][0] -15)) ||(
-      position.z <= 15 &&
-      position.z >= -15 &&
-      position.x <= 15 &&
-      position.x >= -15)
-    ){
+function reducVeloc(vet, position) {
+  let i = 0;
+  for (i = 0; i < vet.length; i++) {
+    if (
+      (position.z <= vet[i][2] + 15 &&
+        position.z >= vet[i][2] - 15 &&
+        position.x <= vet[i][0] + 15 &&
+        position.x >= vet[i][0] - 15) ||
+      (position.z <= 15 &&
+        position.z >= -15 &&
+        position.x <= 15 &&
+        position.x >= -15)
+    ) {
       reduction = false;
-      break
-    }
-    else{
+      break;
+    } else {
       reduction = true;
     }
   }
-  };
+}
 
 let voltas = 0;
 var reduction = false;
@@ -196,7 +226,7 @@ let posicaoPista4 = [
   [210, 0, 30],
 ];
 
-function createPista(vet, pista) {
+function createPista(vet, pista,pistaTexture,foraPistaTexture) {
   let posicaoLargada1 = [
     [-10, 0, 10],
     [-10, 0, -10],
@@ -222,7 +252,7 @@ function createPista(vet, pista) {
     largada1[j].position.set(
       posicaoLargada1[j][0],
       posicaoLargada1[j][1],
-      posicaoLargada1[j][2],
+      posicaoLargada1[j][2]
     );
     pista.add(largada1[j]);
     j++;
@@ -233,16 +263,24 @@ function createPista(vet, pista) {
     largada2[k].position.set(
       posicaoLargada2[k][0],
       posicaoLargada2[k][1],
-      posicaoLargada2[k][2],
+      posicaoLargada2[k][2]
     );
     pista.add(largada2[k]);
     k++;
   }
+  let foraPistaMaterial = new THREE.MeshBasicMaterial({
+    map: foraPistaTexture,
+  });
+  const foraPistaGeometry = new THREE.PlaneGeometry(1000, 1000); // Ajuste o tamanho conforme necessário
+  const foraPista = new THREE.Mesh(foraPistaGeometry, foraPistaMaterial);
+  foraPista.position.set(0, -1, 0); // Ajuste conforme a necessidade de posicionamento
+  foraPista.rotation.x = -Math.PI / 2; // Rotação para deixar o plano horizontal
+  pista.add(foraPista);
 
   let i = 0;
   let cube = [];
   let geometry = new THREE.BoxGeometry(30, 0, 30);
-  let material = new THREE.MeshBasicMaterial({ color: 0Xffffff });
+  let material = new THREE.MeshBasicMaterial({ map: pistaTexture });
 
   while (i < vet.length) {
     cube[i] = new THREE.Mesh(geometry, material);
@@ -251,8 +289,20 @@ function createPista(vet, pista) {
     pista.add(cube[i]);
     i++;
   }
-}
 
+    let cones=[];
+    let fenos=[];
+  
+  for(let k = 0; k < 4; k++){
+    cones[k] = cone.clone();
+    fenos[k] = feno.clone();
+    cones[k].position.set(0, 4, -15);
+    fenos[k].position.set(0, 4, 15);
+    pista.add(cones[k].clone());
+    pista.add(fenos[k].clone());
+    
+  };
+}
 
 // Adição do código da pista
 
