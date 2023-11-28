@@ -16,31 +16,36 @@ export {
   setasPista4,
 };
 
-const loader = new THREE.TextureLoader();
-const feno1 = new THREE.CylinderGeometry(5,5,20,32);
+// CRIAÇAO DO FENO
+let loader = new THREE.TextureLoader();
+const feno1 = new THREE.CylinderGeometry(1, 1, 4, 32);
 
 let cilindroMaterial = [
-  ("fenolateral.jpg",1,1),
-  ("fenobase.jpg",1,1),
-  ("fenolbase.jpg",1,1),
+  setMaterial("fenolateral.jpg",1,1),
+  setMaterial("fenobase.jpg",1,1),
+  setMaterial("fenobase.jpg",1,1)
 ];
-
-let feno = new THREE.Mesh(feno1,cilindroMaterial);
+let feno = new THREE.Mesh(feno1, cilindroMaterial);
 feno.rotateX(degreesToRadians(90));
+feno.rotateZ(degreesToRadians(90));
 
-const basegeometria = new THREE.CylinderGeometry(4.2, 4.2, 0.2, 4);
-const materialbase = new THREE.MeshBasicMaterial({ color: "BLACK" });
-const base = new THREE.Mesh(basegeometria, materialbase);
+function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255'){
+  let mat = new THREE.MeshBasicMaterial({map: loader.load(file), color:color});
+  mat.map.wrapS = mat.map.wrapT = THREE.RepeatWrapping;
+  mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
+  mat.map.repeat.set(repeatU, repeatV);
+  return mat;
+}
 
+
+// CRIAÇÃO DO CONE
 var textureLoader = new THREE.TextureLoader();
-const conegeometria = new THREE.CylinderGeometry(4.2, 4.2, 0.2, 4);
-const materialcone = new THREE.MeshBasicMaterial({ color: 0xFFa700 });
+const conegeometria = new THREE.CylinderGeometry(0.1, 1, 2, 50);
+const materialcone = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
 const cone = new THREE.Mesh(conegeometria, materialcone);
-var sun = textureLoader.load("cone.jpg");
+var corcone = textureLoader.load("cone.png");
+cone.material.map = corcone;
 
-
-// const pistaTexture = loader.load("pedra.jpg");
-// const foraPistaTexture = loader.load("grama.jpg");
 
 // Configuração da Repetição
 // pistaTexture.wrapS = pistaTexture.wrapT = THREE.RepeatWrapping;
@@ -133,6 +138,16 @@ let posicaoPista1 = [
   [60, 0, 60],
   [90, 0, 60],
   [120, 0, 60],
+  [70, 1, 60],
+  [50, 1, 65],
+  [130, 1, 15],
+  [120, 1, 60],
+  [120, 1, -45],
+  [108, 1, -30],
+  [5,1.3,50],
+  [-5, 1, 20],
+  [35,1,-70],
+  [90,1,-60]
 ];
 let posicaoPista2 = [
   [0, 0, -30],
@@ -151,6 +166,16 @@ let posicaoPista2 = [
   [60, 0, 60],
   [60, 0, 30],
   [60, 0, 0],
+  [70, 1, 60],
+  [50, 1, 65],
+  [100, 1, 5],
+  [60, 1, 0],
+  [120, 1, -45],
+  [108, 1, -30],
+  [5,1.3,50],
+  [-5, 1, 20],
+  [35,1,-70],
+  [90,1,-60]
 ];
 let posicaoPista3 = [
   [0, 0, -30],
@@ -185,6 +210,16 @@ let posicaoPista3 = [
   [180, 0, -150],
   [180, 0, -180],
   [210, 0, -180],
+  [140, 1, -55],
+  [175, 1, -85],
+  [130, 1, 15],
+  [120, 1, 60],
+  [180, 1, -120],
+  [120, 1, -120],
+  [5,1.3,50],
+  [-5, 1, 20],
+  [35,1,-70],
+  [90,1,-60]
 ];
 let posicaoPista4 = [
   [0, 0, -30],
@@ -224,6 +259,16 @@ let posicaoPista4 = [
   [150, 0, 30],
   [180, 0, 30],
   [210, 0, 30],
+  [70, 1, 35],
+  [120, 1, 25],
+  [130, 1, 150],
+  [210, 1, 145],
+  [240, 1, -45],
+  [235, 1, 0],
+  [5,1,50],
+  [-5, 1, 20],
+  [35,1,-70],
+  [90,1,-60]
 ];
 
 function createPista(vet, pista,pistaTexture,foraPistaTexture) {
@@ -282,7 +327,7 @@ function createPista(vet, pista,pistaTexture,foraPistaTexture) {
   let geometry = new THREE.BoxGeometry(30, 0, 30);
   let material = new THREE.MeshBasicMaterial({ map: pistaTexture });
 
-  while (i < vet.length) {
+  while (i < vet.length-10) {
     cube[i] = new THREE.Mesh(geometry, material);
     cube[i].position.set(vet[i][0], vet[i][1], vet[i][2]);
     cube[i].receiveShadow = true;
@@ -292,15 +337,21 @@ function createPista(vet, pista,pistaTexture,foraPistaTexture) {
 
     let cones=[];
     let fenos=[];
+    let m = 0;
+    let h = vet.length-1;
+    let posicoescone= [[70, 1, 60],[130, 1, 15], [120, 1, -45],[5,1.3,50],[35,1,-70]];
+    let posicoesfeno= [[50, 1, 65],[120, 1, 60],[108, 1, -30],[-5, 1, 20],[90,1,-60]];
   
-  for(let k = 0; k < 4; k++){
-    cones[k] = cone.clone();
-    fenos[k] = feno.clone();
-    cones[k].position.set(0, 4, -15);
-    fenos[k].position.set(0, 4, 15);
-    pista.add(cones[k].clone());
-    pista.add(fenos[k].clone());
-    
+  while(h > vet.length-10){
+    cones[m] = cone.clone();
+    fenos[m] = feno.clone();
+    cones[m].position.set(vet[h][0], vet[h][1], vet[h][2]);
+    h--;
+    fenos[m].position.set(vet[h][0], vet[h][1], vet[h][2]);
+    h--;
+    pista.add(cones[m]);
+    pista.add(fenos[m]);
+    m++;
   };
 }
 
